@@ -1,10 +1,11 @@
 ﻿using AdaptiveCards;
+using FlightBot.Services.Conversation;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace FlightBot.Bots.State
+namespace FlightBot.Services.Factories
 {
     public class AdaptiveCardFactory
     {

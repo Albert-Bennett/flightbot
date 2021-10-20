@@ -1,12 +1,12 @@
-using FlightBot.Bots.State;
 using FlightBot.Services.Abstractions;
+using FlightBot.Services.State;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FlightBot.Bots
+namespace FlightBot.Bot.Bots
 {
     public class Bot : ActivityHandler
     {

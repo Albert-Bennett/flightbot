@@ -1,16 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace FlightBot.Bots.State
+namespace FlightBot.Services.State
 {
-    public enum FlightFindingStates : byte
-    {
-        FindAirport = 0,
-        GetFlightDate = 1,
-        GetDestination = 2,
-        GetReturnFlight = 3,
-        SendJourneyDetails = 4
-    }
-
     public class ConversationData
     {
         public FlightFindingStates CurrentState { get; set; } = FlightFindingStates.FindAirport;

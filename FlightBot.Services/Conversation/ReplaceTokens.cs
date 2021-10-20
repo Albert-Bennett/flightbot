@@ -1,4 +1,4 @@
-﻿namespace FlightBot.Bots.State.Helpers
+﻿namespace FlightBot.Services.Conversation
 {
     public static class ReplaceTokens
     {

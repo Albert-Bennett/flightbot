@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightBot", "FlightBot.csproj", "{A8DEB8BC-756C-41B3-BDB1-AA12D3EDC6DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightBot.Bot", "FlightBot.Bot\FlightBot.Bot.csproj", "{323295D2-2014-49D9-84F2-BFF1C0E1C171}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightBot.Services", "FlightBot.Services\FlightBot.Services.csproj", "{168A4625-21B2-48F4-AB8F-7F7F202F0E83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A8DEB8BC-756C-41B3-BDB1-AA12D3EDC6DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8DEB8BC-756C-41B3-BDB1-AA12D3EDC6DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8DEB8BC-756C-41B3-BDB1-AA12D3EDC6DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8DEB8BC-756C-41B3-BDB1-AA12D3EDC6DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{323295D2-2014-49D9-84F2-BFF1C0E1C171}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{323295D2-2014-49D9-84F2-BFF1C0E1C171}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{323295D2-2014-49D9-84F2-BFF1C0E1C171}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{323295D2-2014-49D9-84F2-BFF1C0E1C171}.Release|Any CPU.Build.0 = Release|Any CPU
+		{168A4625-21B2-48F4-AB8F-7F7F202F0E83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{168A4625-21B2-48F4-AB8F-7F7F202F0E83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{168A4625-21B2-48F4-AB8F-7F7F202F0E83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{168A4625-21B2-48F4-AB8F-7F7F202F0E83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

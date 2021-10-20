@@ -6,7 +6,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace FlightBot
+namespace FlightBot.Bot
 {
     public class Program
     {

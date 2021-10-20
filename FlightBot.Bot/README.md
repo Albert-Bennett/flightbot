@@ -1,4 +1,4 @@
-﻿# FlightBot
+﻿# FlightBot.Bot
 
 Bot Framework v4 echo bot sample.
 
@@ -15,11 +15,11 @@ This bot has been created using [Bot Framework](https://dev.botframework.com), i
 
 ## To try this sample
 
-- In a terminal, navigate to `FlightBot`
+- In a terminal, navigate to `FlightBot.Bot`
 
     ```bash
     # change into project folder
-    cd # FlightBot
+    cd # FlightBot.Bot
     ```
 
 - Run the bot from a terminal or from Visual Studio, choose option A or B.
@@ -35,8 +35,8 @@ This bot has been created using [Bot Framework](https://dev.botframework.com), i
 
   - Launch Visual Studio
   - File -> Open -> Project/Solution
-  - Navigate to `FlightBot` folder
-  - Select `FlightBot.csproj` file
+  - Navigate to `FlightBot.Bot` folder
+  - Select `FlightBot.Bot.csproj` file
   - Press `F5` to run the project
 
 ## Testing the bot using Bot Framework Emulator

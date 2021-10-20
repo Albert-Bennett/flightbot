@@ -1,6 +1,8 @@
-﻿using FlightBot.Bots.State;
-using FlightBot.Bots.State.Helpers;
-using FlightBot.Services.Abstractions;
+﻿using FlightBot.Services.Abstractions;
+using FlightBot.Services.Conversation;
+using FlightBot.Services.Factories;
+using FlightBot.Services.Factories.Helpers;
+using FlightBot.Services.State;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using System;
@@ -90,7 +92,7 @@ namespace FlightBot.Services
                 case FlightFindingStates.GetFlightDate:
                     {
                         string usersSelectedDate = turnContext.Activity.Value.ToString();
-                        var userInput = AdaptiveCardDateParser.GetDatefromUserInput(usersSelectedDate);
+                        var userInput = CalanderDateParser.GetDatefromUserInput(usersSelectedDate);
                         var displayDate = userInput.ToShortDateString();
 
                         if (userInput > DateTime.Now)
@@ -136,7 +138,7 @@ namespace FlightBot.Services
                         if (userInput == null)
                         {
                             string usersSelectedDate = turnContext.Activity.Value.ToString();
-                            var returnDate = AdaptiveCardDateParser.GetDatefromUserInput(usersSelectedDate);
+                            var returnDate = CalanderDateParser.GetDatefromUserInput(usersSelectedDate);
                             var displayDate = returnDate.ToShortDateString();
 
                             if (userProfile.FlightDate >= returnDate)

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FlightBot.Bots.State
+namespace FlightBot.Services.State
 {
     public class UserProfile
     {

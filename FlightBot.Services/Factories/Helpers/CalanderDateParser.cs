@@ -2,9 +2,9 @@
 using System;
 using System.Globalization;
 
-namespace FlightBot.Bots.State.Helpers
+namespace FlightBot.Services.Factories.Helpers
 {
-    public static class AdaptiveCardDateParser
+    public static class CalanderDateParser
     {
         public static DateTime GetDatefromUserInput(string userInput)
         {

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
 
-namespace FlightBot
+namespace FlightBot.Bot
 {
     public class AdapterWithErrorHandler : CloudAdapter
     {

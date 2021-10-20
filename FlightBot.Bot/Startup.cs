@@ -1,16 +1,14 @@
-﻿using FlightBot.Bots;
-using FlightBot.Services;
+﻿using FlightBot.Services;
 using FlightBot.Services.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace FlightBot
+namespace FlightBot.Bot
 {
     public class Startup
     {
@@ -27,7 +25,7 @@ namespace FlightBot
             services.AddHttpClient().AddControllers().AddNewtonsoftJson();
             services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
 
-            services.AddTransient<IBot, Bot>();
+            services.AddTransient<IBot, Bots.Bot>();
             services.AddTransient<IStateManagerService, StateManagerService>();
             services.AddTransient<IAirportFindingService, AirportFindingService>();
             services.AddTransient<ITextExtractorService, TextExtractorService>();

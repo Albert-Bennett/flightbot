@@ -1,4 +1,4 @@
-﻿using FlightBot.Bots.State;
+﻿using FlightBot.Services.State;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using System.Threading.Tasks;
