@@ -31,6 +31,7 @@ namespace FlightBot
             services.AddTransient<IStateManagerService, StateManagerService>();
             services.AddTransient<IAirportFindingService, AirportFindingService>();
             services.AddTransient<ITextExtractorService, TextExtractorService>();
+            services.AddTransient<IFlightFindingService, FlightFindingService>();
 
             CreateConversationalState(services);
         }

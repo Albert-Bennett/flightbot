@@ -12,12 +12,14 @@ namespace FlightBot.Services
     {
         readonly IAirportFindingService _airportFindingService;
         readonly ITextExtractorService _textExtractorService;
+        readonly IFlightFindingService _flightFindingService;
 
         public StateManagerService(IAirportFindingService airportFindingService,
-            ITextExtractorService textExtractorService)
+            ITextExtractorService textExtractorService, IFlightFindingService flightFindingService)
         {
             _airportFindingService = airportFindingService;
             _textExtractorService = textExtractorService;
+            _flightFindingService = flightFindingService;
         }
 
         public async Task<Attachment> GenerateCurentState(UserProfile userProfile,
@@ -62,7 +64,7 @@ namespace FlightBot.Services
                             var destination = await _textExtractorService.ExtractDestination(userInput);
                             var airport = userProfile.SelectedAirport;
 
-                            if(await _airportFindingService.CheckFlightsTo(airport, destination)) 
+                            if(await _flightFindingService.CheckFlightsTo(airport, destination)) 
                             {
                                 userProfile.Destination = destination;
                                 conversationData.CurrentState = FlightFindingStates.GetFlightDate;
@@ -93,7 +95,7 @@ namespace FlightBot.Services
 
                         if (userInput > DateTime.Now)
                         {
-                            if (await _airportFindingService.CheckFlightsToOn(userProfile.SelectedAirport, userProfile.Destination, displayDate))
+                            if (await _flightFindingService.CheckFlightsToOn(userProfile.SelectedAirport, userProfile.Destination, displayDate))
                             {
                                 userProfile.FlightDate = userInput;
                                 userProfile.DisplayFlightDate = displayDate;
@@ -147,7 +149,7 @@ namespace FlightBot.Services
                             }
                             else
                             {
-                                var foundFlights = await _airportFindingService.FindFlights(
+                                var foundFlights = await _flightFindingService.FindFlights(
                                     userProfile.SelectedAirport, userProfile.Destination,
                                     userProfile.FlightDate, returnDate);
 
@@ -177,7 +179,7 @@ namespace FlightBot.Services
                         {
                             conversationData.CurrentState = FlightFindingStates.FindAirport;
 
-                            var foundFlights = await _airportFindingService.FindFlights(
+                            var foundFlights = await _flightFindingService.FindFlights(
                                 userProfile.SelectedAirport, userProfile.Destination,
                                 userProfile.FlightDate);
 
