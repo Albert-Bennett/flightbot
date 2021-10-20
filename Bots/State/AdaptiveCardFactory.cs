@@ -8,18 +8,75 @@ namespace FlightBot.Bots.State
 {
     public class AdaptiveCardFactory
     {
-        static AdaptiveSchemaVersion defaultSchema = new AdaptiveSchemaVersion(1, 0);
+        static readonly AdaptiveSchemaVersion defaultSchema = new(1, 0);
+
+        public static Attachment GetFoundFlightsCard(string message, ICollection<string> flights)
+        {
+            var cardActions = new List<AdaptiveAction>();
+
+            foreach (var f in flights)
+            {
+                cardActions.Add(new AdaptiveOpenUrlAction
+                {
+                    Title = f,
+                    Url = new Uri(f)
+                });
+            }
+
+            cardActions.Add(new AdaptiveSubmitAction
+            {
+                Title = Messages.NO_SUITABLE_FLIGHTS,
+                Data = Messages.NO_SUITABLE_FLIGHTS
+            });
+
+            AdaptiveCard card = new(defaultSchema)
+            {
+                Body = new List<AdaptiveElement>
+                {
+                    new AdaptiveTextBlock
+                    {
+                        Text = message,
+                        Size = AdaptiveTextSize.Default,
+                        Wrap = true
+                    },
+                    new AdaptiveActionSet
+                    {
+                        Actions = cardActions
+                    }
+                }
+            };
+
+            return CreateAdaptiveCardAttachment(card.ToJson());
+        }
+
+        public static Attachment GetOptionalCalanderCard(string message)
+        {
+            AdaptiveCard card = CreateCalanderCard(message);
+            card.Actions.Add(new AdaptiveSubmitAction()
+            {
+                Title = Messages.DECLINE,
+                Data = Messages.DECLINE
+            });
+
+            return CreateAdaptiveCardAttachment(card.ToJson());
+        }
 
         public static Attachment GetCalanderCard(string message)
         {
-            AdaptiveCard card = new(defaultSchema)
+            return CreateAdaptiveCardAttachment(CreateCalanderCard(message).ToJson());
+        }
+
+        private static AdaptiveCard CreateCalanderCard(string message)
+        {
+            return new(defaultSchema)
             {
                 Body = new List<AdaptiveElement>()
                 {
                     new AdaptiveTextBlock()
                     {
                         Text = message,
-                        Size = AdaptiveTextSize.Default
+                        Size = AdaptiveTextSize.Default,
+                        Wrap = true
                     },
 
                     new AdaptiveDateInput()
@@ -38,8 +95,6 @@ namespace FlightBot.Bots.State
                     }
                 }
             };
-
-            return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
         public static Attachment GetTextCard(string message)
@@ -51,7 +106,8 @@ namespace FlightBot.Bots.State
                     new AdaptiveTextBlock()
                     {
                         Text = message,
-                        Size = AdaptiveTextSize.Default
+                        Size = AdaptiveTextSize.Default,
+                        Wrap = true
                     }
                 }
             };
@@ -61,14 +117,15 @@ namespace FlightBot.Bots.State
 
         public static Attachment GetActionCard(string message, string action)
         {
-            AdaptiveCard card = new AdaptiveCard(defaultSchema)
+            AdaptiveCard card = new(defaultSchema)
             {
                 Body = new List<AdaptiveElement>
                 {
                     new AdaptiveTextBlock
                     {
                         Text = message,
-                        Size = AdaptiveTextSize.Default
+                        Size = AdaptiveTextSize.Default,
+                        Wrap = true
                     },
                     new AdaptiveActionSet
                     {
@@ -89,14 +146,15 @@ namespace FlightBot.Bots.State
 
         public static Attachment GetCaroselCard(string message, IList<string> actions)
         {
-            AdaptiveCard card = new AdaptiveCard(defaultSchema)
+            AdaptiveCard card = new(defaultSchema)
             {
                 Body = new List<AdaptiveElement>
                 {
                     new AdaptiveTextBlock
                     {
                         Text = message,
-                        Size = AdaptiveTextSize.Default
+                        Size = AdaptiveTextSize.Default,
+                        Wrap = true
                     }
                 }
             };

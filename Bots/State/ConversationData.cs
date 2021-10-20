@@ -6,7 +6,9 @@ namespace FlightBot.Bots.State
     {
         FindAirport = 0,
         GetFlightDate = 1,
-        GetDestination = 2
+        GetDestination = 2,
+        GetReturnFlight = 3,
+        SendJourneyDetails = 4
     }
 
     public class ConversationData
@@ -15,8 +17,5 @@ namespace FlightBot.Bots.State
 
         //Airports initially found
         public List<string> AirportsFound { get; set; }
-
-        //Airports checked for flights to destination used when flight not availible to destination
-        public List<string> AirportsChecked { get; set; }
     }
 }

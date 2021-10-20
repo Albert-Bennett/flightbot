@@ -22,7 +22,7 @@ namespace FlightBot {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Messages {
+    internal class Messages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace FlightBot {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FlightBot.Messages", typeof(Messages).Assembly);
@@ -51,7 +51,7 @@ namespace FlightBot {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace FlightBot {
         /// <summary>
         ///   Looks up a localized string similar to Thats perfect! Can you tell me what your destination is?.
         /// </summary>
-        public static string AIRPORT_CONFIRMED {
+        internal static string AIRPORT_CONFIRMED {
             get {
                 return ResourceManager.GetString("AIRPORT_CONFIRMED", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace FlightBot {
         /// <summary>
         ///   Looks up a localized string similar to Thats fine, please let me know which airport are you flying from..
         /// </summary>
-        public static string AIRPORT_NOT_CONFIRMED {
+        internal static string AIRPORT_NOT_CONFIRMED {
             get {
                 return ResourceManager.GetString("AIRPORT_NOT_CONFIRMED", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace FlightBot {
         /// <summary>
         ///   Looks up a localized string similar to Hmm... I can&apos;t find that particular airport do you have the airport code for it or do you want me to try and find another airport.
         /// </summary>
-        public static string AIRPORT_NOT_FOUND {
+        internal static string AIRPORT_NOT_FOUND {
             get {
                 return ResourceManager.GetString("AIRPORT_NOT_FOUND", resourceCulture);
             }
@@ -90,16 +90,25 @@ namespace FlightBot {
         /// <summary>
         ///   Looks up a localized string similar to We are off to a flying start! Here are some flights that I have found to {DESTINATION} on the {DATE}..
         /// </summary>
-        public static string DATE_CONFIRMED {
+        internal static string DATE_CONFIRMED {
             get {
                 return ResourceManager.GetString("DATE_CONFIRMED", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to I&apos;ve checked for flights from {AIRPORT} to {DESTINATION} and it looks like that airport isn&apos;t servicing that destination right now. {AIRPORTS_NEARBY}.
+        ///   Looks up a localized string similar to No thanks.
         /// </summary>
-        public static string DESTINATION_NOT_AVAILIBLE {
+        internal static string DECLINE {
+            get {
+                return ResourceManager.GetString("DECLINE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I&apos;ve checked for flights from {AIRPORT} to {DESTINATION} and it looks like that airport isn&apos;t servicing that destination right now. Can you tell me the name of another airport that you&apos;d like to travel from?.
+        /// </summary>
+        internal static string DESTINATION_NOT_AVAILIBLE {
             get {
                 return ResourceManager.GetString("DESTINATION_NOT_AVAILIBLE", resourceCulture);
             }
@@ -108,16 +117,25 @@ namespace FlightBot {
         /// <summary>
         ///   Looks up a localized string similar to Super! What date are you planning on flying to {DESTINATION}?.
         /// </summary>
-        public static string DESTINATON_CONFIRMED {
+        internal static string DESTINATON_CONFIRMED {
             get {
                 return ResourceManager.GetString("DESTINATON_CONFIRMED", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I found these flights going from {AIRPORT} to {DESTINATION} on {FLIGHT_DATE}. .
+        /// </summary>
+        internal static string FOUND_FLIGHTS {
+            get {
+                return ResourceManager.GetString("FOUND_FLIGHTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I&apos;ve found these airports near you. Which one are you traveling from?.
         /// </summary>
-        public static string FOUND_MANY_AIRPORTS {
+        internal static string FOUND_MANY_AIRPORTS {
             get {
                 return ResourceManager.GetString("FOUND_MANY_AIRPORTS", resourceCulture);
             }
@@ -126,7 +144,7 @@ namespace FlightBot {
         /// <summary>
         ///   Looks up a localized string similar to Hmm... I can&apos;t find any nearby airports. Can you tell me where you will be flying from?.
         /// </summary>
-        public static string FOUND_NO_AIRPORTS {
+        internal static string FOUND_NO_AIRPORTS {
             get {
                 return ResourceManager.GetString("FOUND_NO_AIRPORTS", resourceCulture);
             }
@@ -135,16 +153,34 @@ namespace FlightBot {
         /// <summary>
         ///   Looks up a localized string similar to Hmm... it looks like the closest airport to you is:.
         /// </summary>
-        public static string FOUND_ONE_AIRPORT {
+        internal static string FOUND_ONE_AIRPORT {
             get {
                 return ResourceManager.GetString("FOUND_ONE_AIRPORT", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I have found these flights going from {AIRPORT} to {DESTINATION} on {FLIGHT_DATE}, retuning on {RETURN_DATE}.
+        /// </summary>
+        internal static string FOUND_RETURN_FLIGHTS {
+            get {
+                return ResourceManager.GetString("FOUND_RETURN_FLIGHTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I&apos;m sorry but your return date {RETURN_DATE} has to be after your travel date {FLIGHT_DATE}. Can you choose a new return date for me?.
+        /// </summary>
+        internal static string INVALID_RETURN_DATE {
+            get {
+                return ResourceManager.GetString("INVALID_RETURN_DATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unfortunatly, I can&apos;t find any flights from {AIRPORT} to {DESTINATION} on {DATE}. Please enter a new date and, I&apos;ll search again or you can tell me in plain English where you&apos;d like to go and the airport that you are traveling from..
         /// </summary>
-        public static string NO_FLIGHTS_FOUND {
+        internal static string NO_FLIGHTS_FOUND {
             get {
                 return ResourceManager.GetString("NO_FLIGHTS_FOUND", resourceCulture);
             }
@@ -153,25 +189,52 @@ namespace FlightBot {
         /// <summary>
         ///   Looks up a localized string similar to Please tell me of another airport that you would like me to search for availible flight from?.
         /// </summary>
-        public static string NO_OTHER_AIRPORTS_NEARBY {
+        internal static string NO_OTHER_AIRPORTS_NEARBY {
             get {
                 return ResourceManager.GetString("NO_OTHER_AIRPORTS_NEARBY", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to None of these are sutible.
+        /// </summary>
+        internal static string NO_SUITABLE_FLIGHTS {
+            get {
+                return ResourceManager.GetString("NO_SUITABLE_FLIGHTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to None of these options.
         /// </summary>
-        public static string NONE_OF_THESE {
+        internal static string NONE_OF_THESE {
             get {
                 return ResourceManager.GetString("NONE_OF_THESE", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hmm... I don&apos;t see any flights leaving {DESTINATION} on the {FLIGHT_DATE}. Can you please chose a differnt date?.
+        /// </summary>
+        internal static string RECONFIRM_DATE {
+            get {
+                return ResourceManager.GetString("RECONFIRM_DATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I have found flights for {DESTINATION} on {FLIGHT_DATE}. Do you want me to look up return Flights from {DESTINATION} as well?.
+        /// </summary>
+        internal static string RETURN_FLIGHT_ASK {
+            get {
+                return ResourceManager.GetString("RETURN_FLIGHT_ASK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I had found these other airports near you. Do you want me to check them for flights going to {DESTINATION}?.
         /// </summary>
-        public static string SOME_OTHER_AIRPORTS_NEARBY {
+        internal static string SOME_OTHER_AIRPORTS_NEARBY {
             get {
                 return ResourceManager.GetString("SOME_OTHER_AIRPORTS_NEARBY", resourceCulture);
             }
@@ -180,7 +243,7 @@ namespace FlightBot {
         /// <summary>
         ///   Looks up a localized string similar to Hi there, I&apos;d like to help you find flights. {AIRPORT_RESPONSE}.
         /// </summary>
-        public static string WELCOME_MESSAGE {
+        internal static string WELCOME_MESSAGE {
             get {
                 return ResourceManager.GetString("WELCOME_MESSAGE", resourceCulture);
             }
