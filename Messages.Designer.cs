@@ -124,6 +124,15 @@ namespace FlightBot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I found these flights going from {AIRPORT} to {DESTINATION} on {FLIGHT_DATE}. .
+        /// </summary>
+        internal static string FOUND_FLIGHTS {
+            get {
+                return ResourceManager.GetString("FOUND_FLIGHTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I&apos;ve found these airports near you. Which one are you traveling from?.
         /// </summary>
         internal static string FOUND_MANY_AIRPORTS {
@@ -151,6 +160,24 @@ namespace FlightBot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I have found these flights going from {AIRPORT} to {DESTINATION} on {FLIGHT_DATE}, retuning on {RETURN_DATE}.
+        /// </summary>
+        internal static string FOUND_RETURN_FLIGHTS {
+            get {
+                return ResourceManager.GetString("FOUND_RETURN_FLIGHTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I&apos;m sorry but your return date {RETURN_DATE} has to be after your travel date {FLIGHT_DATE}. Can you choose a new return date for me?.
+        /// </summary>
+        internal static string INVALID_RETURN_DATE {
+            get {
+                return ResourceManager.GetString("INVALID_RETURN_DATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unfortunatly, I can&apos;t find any flights from {AIRPORT} to {DESTINATION} on {DATE}. Please enter a new date and, I&apos;ll search again or you can tell me in plain English where you&apos;d like to go and the airport that you are traveling from..
         /// </summary>
         internal static string NO_FLIGHTS_FOUND {
@@ -165,6 +192,15 @@ namespace FlightBot {
         internal static string NO_OTHER_AIRPORTS_NEARBY {
             get {
                 return ResourceManager.GetString("NO_OTHER_AIRPORTS_NEARBY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None of these are sutible.
+        /// </summary>
+        internal static string NO_SUITABLE_FLIGHTS {
+            get {
+                return ResourceManager.GetString("NO_SUITABLE_FLIGHTS", resourceCulture);
             }
         }
         

@@ -9,5 +9,8 @@ namespace FlightBot.Bots.State
         public DateTime FlightDate { get; set; }
 
         public string DisplayFlightDate { get; set; }
+
+        public DateTime ReturnFlightDate { get; set; }
+        public string DisplayReturnFlightDate { get; set; }
     }
 }

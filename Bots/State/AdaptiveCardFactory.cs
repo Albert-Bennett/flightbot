@@ -8,7 +8,46 @@ namespace FlightBot.Bots.State
 {
     public class AdaptiveCardFactory
     {
-        static AdaptiveSchemaVersion defaultSchema = new AdaptiveSchemaVersion(1, 0);
+        static readonly AdaptiveSchemaVersion defaultSchema = new(1, 0);
+
+        public static Attachment GetFoundFlightsCard(string message, ICollection<string> flights)
+        {
+            var cardActions = new List<AdaptiveAction>();
+
+            foreach (var f in flights)
+            {
+                cardActions.Add(new AdaptiveOpenUrlAction
+                {
+                    Title = f,
+                    Url = new Uri(f)
+                });
+            }
+
+            cardActions.Add(new AdaptiveSubmitAction
+            {
+                Title = Messages.NO_SUITABLE_FLIGHTS,
+                Data = Messages.NO_SUITABLE_FLIGHTS
+            });
+
+            AdaptiveCard card = new(defaultSchema)
+            {
+                Body = new List<AdaptiveElement>
+                {
+                    new AdaptiveTextBlock
+                    {
+                        Text = message,
+                        Size = AdaptiveTextSize.Default,
+                        Wrap = true
+                    },
+                    new AdaptiveActionSet
+                    {
+                        Actions = cardActions
+                    }
+                }
+            };
+
+            return CreateAdaptiveCardAttachment(card.ToJson());
+        }
 
         public static Attachment GetOptionalCalanderCard(string message)
         {
@@ -78,7 +117,7 @@ namespace FlightBot.Bots.State
 
         public static Attachment GetActionCard(string message, string action)
         {
-            AdaptiveCard card = new AdaptiveCard(defaultSchema)
+            AdaptiveCard card = new(defaultSchema)
             {
                 Body = new List<AdaptiveElement>
                 {
@@ -107,7 +146,7 @@ namespace FlightBot.Bots.State
 
         public static Attachment GetCaroselCard(string message, IList<string> actions)
         {
-            AdaptiveCard card = new AdaptiveCard(defaultSchema)
+            AdaptiveCard card = new(defaultSchema)
             {
                 Body = new List<AdaptiveElement>
                 {

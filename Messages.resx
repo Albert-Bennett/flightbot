@@ -138,6 +138,9 @@
   <data name="DESTINATON_CONFIRMED" xml:space="preserve">
     <value>Super! What date are you planning on flying to {DESTINATION}?</value>
   </data>
+  <data name="FOUND_FLIGHTS" xml:space="preserve">
+    <value>I found these flights going from {AIRPORT} to {DESTINATION} on {FLIGHT_DATE}. </value>
+  </data>
   <data name="FOUND_MANY_AIRPORTS" xml:space="preserve">
     <value>I've found these airports near you. Which one are you traveling from?</value>
   </data>
@@ -147,6 +150,12 @@
   <data name="FOUND_ONE_AIRPORT" xml:space="preserve">
     <value>Hmm... it looks like the closest airport to you is:</value>
   </data>
+  <data name="FOUND_RETURN_FLIGHTS" xml:space="preserve">
+    <value>I have found these flights going from {AIRPORT} to {DESTINATION} on {FLIGHT_DATE}, retuning on {RETURN_DATE}</value>
+  </data>
+  <data name="INVALID_RETURN_DATE" xml:space="preserve">
+    <value>I'm sorry but your return date {RETURN_DATE} has to be after your travel date {FLIGHT_DATE}. Can you choose a new return date for me?</value>
+  </data>
   <data name="NONE_OF_THESE" xml:space="preserve">
     <value>None of these options</value>
   </data>
@@ -155,6 +164,9 @@
   </data>
   <data name="NO_OTHER_AIRPORTS_NEARBY" xml:space="preserve">
     <value>Please tell me of another airport that you would like me to search for availible flight from?</value>
+  </data>
+  <data name="NO_SUITABLE_FLIGHTS" xml:space="preserve">
+    <value>None of these are sutible</value>
   </data>
   <data name="RECONFIRM_DATE" xml:space="preserve">
     <value>Hmm... I don't see any flights leaving {DESTINATION} on the {FLIGHT_DATE}. Can you please chose a differnt date?</value>
