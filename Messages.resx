@@ -129,8 +129,11 @@
   <data name="DATE_CONFIRMED" xml:space="preserve">
     <value>We are off to a flying start! Here are some flights that I have found to {DESTINATION} on the {DATE}.</value>
   </data>
+  <data name="DECLINE" xml:space="preserve">
+    <value>No thanks</value>
+  </data>
   <data name="DESTINATION_NOT_AVAILIBLE" xml:space="preserve">
-    <value>I've checked for flights from {AIRPORT} to {DESTINATION} and it looks like that airport isn't servicing that destination right now. {AIRPORTS_NEARBY}</value>
+    <value>I've checked for flights from {AIRPORT} to {DESTINATION} and it looks like that airport isn't servicing that destination right now. Can you tell me the name of another airport that you'd like to travel from?</value>
   </data>
   <data name="DESTINATON_CONFIRMED" xml:space="preserve">
     <value>Super! What date are you planning on flying to {DESTINATION}?</value>
@@ -152,6 +155,12 @@
   </data>
   <data name="NO_OTHER_AIRPORTS_NEARBY" xml:space="preserve">
     <value>Please tell me of another airport that you would like me to search for availible flight from?</value>
+  </data>
+  <data name="RECONFIRM_DATE" xml:space="preserve">
+    <value>Hmm... I don't see any flights leaving {DESTINATION} on the {FLIGHT_DATE}. Can you please chose a differnt date?</value>
+  </data>
+  <data name="RETURN_FLIGHT_ASK" xml:space="preserve">
+    <value>I have found flights for {DESTINATION} on {FLIGHT_DATE}. Do you want me to look up return Flights from {DESTINATION} as well?</value>
   </data>
   <data name="SOME_OTHER_AIRPORTS_NEARBY" xml:space="preserve">
     <value>I had found these other airports near you. Do you want me to check them for flights going to {DESTINATION}?</value>

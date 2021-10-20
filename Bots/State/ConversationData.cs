@@ -6,7 +6,8 @@ namespace FlightBot.Bots.State
     {
         FindAirport = 0,
         GetFlightDate = 1,
-        GetDestination = 2
+        GetDestination = 2,
+        GetReturnFlight = 3
     }
 
     public class ConversationData

@@ -10,16 +10,34 @@ namespace FlightBot.Bots.State
     {
         static AdaptiveSchemaVersion defaultSchema = new AdaptiveSchemaVersion(1, 0);
 
+        public static Attachment GetOptionalCalanderCard(string message)
+        {
+            AdaptiveCard card = CreateCalanderCard(message);
+            card.Actions.Add(new AdaptiveSubmitAction()
+            {
+                Title = Messages.DECLINE,
+                Data = Messages.DECLINE
+            });
+
+            return CreateAdaptiveCardAttachment(card.ToJson());
+        }
+
         public static Attachment GetCalanderCard(string message)
         {
-            AdaptiveCard card = new(defaultSchema)
+            return CreateAdaptiveCardAttachment(CreateCalanderCard(message).ToJson());
+        }
+
+        private static AdaptiveCard CreateCalanderCard(string message)
+        {
+            return new(defaultSchema)
             {
                 Body = new List<AdaptiveElement>()
                 {
                     new AdaptiveTextBlock()
                     {
                         Text = message,
-                        Size = AdaptiveTextSize.Default
+                        Size = AdaptiveTextSize.Default,
+                        Wrap = true
                     },
 
                     new AdaptiveDateInput()
@@ -38,8 +56,6 @@ namespace FlightBot.Bots.State
                     }
                 }
             };
-
-            return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
         public static Attachment GetTextCard(string message)
@@ -51,7 +67,8 @@ namespace FlightBot.Bots.State
                     new AdaptiveTextBlock()
                     {
                         Text = message,
-                        Size = AdaptiveTextSize.Default
+                        Size = AdaptiveTextSize.Default,
+                        Wrap = true
                     }
                 }
             };
@@ -68,7 +85,8 @@ namespace FlightBot.Bots.State
                     new AdaptiveTextBlock
                     {
                         Text = message,
-                        Size = AdaptiveTextSize.Default
+                        Size = AdaptiveTextSize.Default,
+                        Wrap = true
                     },
                     new AdaptiveActionSet
                     {
@@ -96,7 +114,8 @@ namespace FlightBot.Bots.State
                     new AdaptiveTextBlock
                     {
                         Text = message,
-                        Size = AdaptiveTextSize.Default
+                        Size = AdaptiveTextSize.Default,
+                        Wrap = true
                     }
                 }
             };
