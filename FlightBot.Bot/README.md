@@ -1,8 +1,6 @@
 ﻿# FlightBot.Bot
 
-Bot Framework v4 echo bot sample.
-
-This bot has been created using [Bot Framework](https://dev.botframework.com), it shows how to create a simple bot that accepts input from the user and echoes it back.
+This bot has been created using [Bot Framework](https://dev.botframework.com), it is a bot that integrates with several third party APIs including: LUIS.ai, skyscanner and geoname to name a few to help users to find flights.
 
 ## Prerequisites
 
