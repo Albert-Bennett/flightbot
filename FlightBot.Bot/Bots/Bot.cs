@@ -24,7 +24,7 @@ namespace FlightBot.Bot.Bots
 
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            await SendCurrentState(turnContext);
+            await SendCurrentState(turnContext, cancellationToken);
         }
 
         public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default)
@@ -37,10 +37,10 @@ namespace FlightBot.Bot.Bots
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
         {
-            await SendCurrentState(turnContext);
+            await SendCurrentState(turnContext, cancellationToken);
         }
 
-        private async Task SendCurrentState(ITurnContext turnContext)
+        private async Task SendCurrentState(ITurnContext turnContext, CancellationToken cancellationToken)
         {
             var conversationStateAccessors = _conversationState.CreateProperty<ConversationData>(nameof(ConversationData));
             var conversationData = await conversationStateAccessors.GetAsync(turnContext, () => new ConversationData());
@@ -48,7 +48,9 @@ namespace FlightBot.Bot.Bots
             var userStateAccessors = _userState.CreateProperty<UserProfile>(nameof(UserProfile));
             var userProfile = await userStateAccessors.GetAsync(turnContext, () => new UserProfile());
 
-            var adaptiveCard = await _stateManager.GenerateCurentState(userProfile, conversationData, turnContext);
+            var adaptiveCard = await _stateManager.GenerateCurentState(userProfile, conversationData,
+                turnContext, cancellationToken);
+
             await turnContext.SendActivityAsync(MessageFactory.Attachment(adaptiveCard));
         }
     }

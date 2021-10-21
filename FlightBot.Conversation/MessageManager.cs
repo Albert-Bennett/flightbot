@@ -47,5 +47,7 @@
             airportsFound == 0 ? Messages.RESTART_MESSAGE.Replace(ReplaceTokens.AirportResponse, Messages.FOUND_NO_AIRPORTS) :
             airportsFound == 1 ? Messages.RESTART_MESSAGE.Replace(ReplaceTokens.AirportResponse, Messages.FOUND_ONE_AIRPORT) :
             Messages.RESTART_MESSAGE.Replace(ReplaceTokens.AirportResponse, Messages.FOUND_MANY_AIRPORTS);
+        public static string DESTINATION_NOT_RECOGNIZED(string destination)=>
+            Messages.DESTINATION_NOT_RECOGNIZED.Replace(ReplaceTokens.Destination, destination);
     }
 }

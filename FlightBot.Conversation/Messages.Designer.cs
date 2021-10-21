@@ -115,6 +115,15 @@ namespace FlightBot.Conversation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I&apos;m sorry but I can&apos;t find the destination &quot;{DESTINATION}&quot;. Can you tell me a different name for it..
+        /// </summary>
+        internal static string DESTINATION_NOT_RECOGNIZED {
+            get {
+                return ResourceManager.GetString("DESTINATION_NOT_RECOGNIZED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Super! What date are you planning on flying to {DESTINATION}?.
         /// </summary>
         internal static string DESTINATON_CONFIRMED {

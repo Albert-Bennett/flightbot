@@ -6,6 +6,7 @@ using FlightBot.Services.State;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FlightBot.Services
@@ -13,11 +14,11 @@ namespace FlightBot.Services
     public sealed class StateManagerService : IStateManagerService
     {
         readonly IAirportFindingService _airportFindingService;
-        readonly ITextExtractorService _textExtractorService;
+        readonly ILuisInterpreterService _textExtractorService;
         readonly IFlightFindingService _flightFindingService;
 
         public StateManagerService(IAirportFindingService airportFindingService,
-            ITextExtractorService textExtractorService, IFlightFindingService flightFindingService)
+            ILuisInterpreterService textExtractorService, IFlightFindingService flightFindingService)
         {
             _airportFindingService = airportFindingService;
             _textExtractorService = textExtractorService;
@@ -25,7 +26,7 @@ namespace FlightBot.Services
         }
 
         public async Task<Attachment> GenerateCurentState(UserProfile userProfile,
-            ConversationData conversationData, ITurnContext turnContext)
+            ConversationData conversationData, ITurnContext turnContext, CancellationToken cancellationToken)
         {
             switch (conversationData.CurrentState)
             {
@@ -63,8 +64,15 @@ namespace FlightBot.Services
 
                 case FlightFindingStates.GetDestination:
                     {
-                        var userInput = turnContext.Activity.Text;
-                        var destination = await _textExtractorService.ExtractDestination(userInput);
+                        var destination = await _textExtractorService.InterpretDestination(turnContext, cancellationToken);
+
+                        if (destination.Equals(string.Empty)) 
+                        {
+                            var message = MessageManager.DESTINATION_NOT_RECOGNIZED(turnContext.Activity.Text);
+
+                            return AdaptiveCardFactory.GetTextCard(message);
+                        }
+
                         var airport = userProfile.SelectedAirport;
 
                         if (await _flightFindingService.CheckFlightsTo(airport, destination))

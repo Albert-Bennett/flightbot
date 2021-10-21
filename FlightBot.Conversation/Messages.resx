@@ -135,6 +135,9 @@
   <data name="DESTINATION_NOT_AVAILIBLE" xml:space="preserve">
     <value>I've checked for flights from {AIRPORT} to {DESTINATION} and it looks like that airport isn't servicing that destination right now. Can you tell me the name of another airport that you'd like to travel from?</value>
   </data>
+  <data name="DESTINATION_NOT_RECOGNIZED" xml:space="preserve">
+    <value>I'm sorry but I can't find the destination "{DESTINATION}". Can you tell me a different name for it.</value>
+  </data>
   <data name="DESTINATON_CONFIRMED" xml:space="preserve">
     <value>Super! What date are you planning on flying to {DESTINATION}?</value>
   </data>
