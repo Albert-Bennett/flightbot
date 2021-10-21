@@ -223,6 +223,15 @@ namespace FlightBot.Conversation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to That&apos;s not a problem, I&apos;ll try to help you find a differnt flight. {AIRPORT_RESPONSE}.
+        /// </summary>
+        internal static string RESTART_MESSAGE {
+            get {
+                return ResourceManager.GetString("RESTART_MESSAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I have found flights for {DESTINATION} on {FLIGHT_DATE}. Do you want me to look up return Flights from {DESTINATION} as well?.
         /// </summary>
         internal static string RETURN_FLIGHT_ASK {

@@ -43,5 +43,9 @@
             airportsFound == 0 ? Messages.WELCOME_MESSAGE.Replace(ReplaceTokens.AirportResponse, Messages.FOUND_NO_AIRPORTS) :
             airportsFound == 1 ? Messages.WELCOME_MESSAGE.Replace(ReplaceTokens.AirportResponse, Messages.FOUND_ONE_AIRPORT) :
             Messages.WELCOME_MESSAGE.Replace(ReplaceTokens.AirportResponse, Messages.FOUND_MANY_AIRPORTS);
+        public static string RESTART_MESSAGE(int airportsFound)=>
+            airportsFound == 0 ? Messages.RESTART_MESSAGE.Replace(ReplaceTokens.AirportResponse, Messages.FOUND_NO_AIRPORTS) :
+            airportsFound == 1 ? Messages.RESTART_MESSAGE.Replace(ReplaceTokens.AirportResponse, Messages.FOUND_ONE_AIRPORT) :
+            Messages.RESTART_MESSAGE.Replace(ReplaceTokens.AirportResponse, Messages.FOUND_MANY_AIRPORTS);
     }
 }

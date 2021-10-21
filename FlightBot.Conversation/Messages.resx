@@ -171,6 +171,9 @@
   <data name="RECONFIRM_DATE" xml:space="preserve">
     <value>Hmm... I don't see any flights leaving {DESTINATION} on the {FLIGHT_DATE}. Can you please chose a differnt date?</value>
   </data>
+  <data name="RESTART_MESSAGE" xml:space="preserve">
+    <value>That's not a problem, I'll try to help you find a differnt flight. {AIRPORT_RESPONSE}</value>
+  </data>
   <data name="RETURN_FLIGHT_ASK" xml:space="preserve">
     <value>I have found flights for {DESTINATION} on {FLIGHT_DATE}. Do you want me to look up return Flights from {DESTINATION} as well?</value>
   </data>
