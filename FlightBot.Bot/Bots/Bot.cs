@@ -10,9 +10,9 @@ namespace FlightBot.Bot.Bots
 {
     public class Bot : ActivityHandler
     {
-        private BotState _conversationState;
-        private BotState _userState;
-        private IStateManagerService _stateManager;
+        private readonly BotState _conversationState;
+        private readonly BotState _userState;
+        private readonly IStateManagerService _stateManager;
 
         public Bot(ConversationState conversationState, UserState userState,
             IStateManagerService stateManager)
@@ -27,7 +27,7 @@ namespace FlightBot.Bot.Bots
             await SendCurrentState(turnContext);
         }
 
-        public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default)
         {
             await base.OnTurnAsync(turnContext, cancellationToken);
 

@@ -1,6 +1,6 @@
-﻿namespace FlightBot.Services.Conversation
+﻿namespace FlightBot.Conversation
 {
-    public static class ReplaceTokens
+    internal class ReplaceTokens
     {
         public static string AirportResponse = "{AIRPORT_RESPONSE}";
         public static string AirportsNearby = "{AIRPORTS_NEARBY}";

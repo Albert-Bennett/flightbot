@@ -2,11 +2,11 @@
 using System;
 using System.Globalization;
 
-namespace FlightBot.Services.Factories.Helpers
+namespace FlightBot.Conversation.Extensions
 {
-    public static class CalanderDateParser
+    public static class CalanderDateTimeExtension
     {
-        public static DateTime GetDatefromUserInput(string userInput)
+        public static DateTime GetDatefromCalander(this string userInput)
         {
             var jobject = JObject.Parse(userInput)["dateInput"];
             var dateString = jobject.ToString();
