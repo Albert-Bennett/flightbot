@@ -6,14 +6,35 @@ namespace FlightBot.Services
 {
     public class AirportFindingService : IAirportFindingService
     {
+        readonly IAmadeusAPIService _amadeusAPIService;
+
+        public AirportFindingService(IAmadeusAPIService amadeusAPIService)
+        {
+            _amadeusAPIService = amadeusAPIService;
+        }
+
         public async Task<List<string>> FindClosestAirport()
         {
-            return new List<string>() { "DUBLIN", "NOT DUBLIN" };
+            double latitude = 53.429174;
+            double longitude = -6.238352;
+
+            var searchResult = await _amadeusAPIService.SearchForNearbyAirports(latitude, longitude);
+
+            List<string> airports = new();
+
+            foreach(var airport in searchResult.data)
+            {
+                airports.Add(airport.detailedName);
+            }
+
+            return airports;
         }
 
         public async Task<bool> ConfirmAirportExists(string airport)
         {
-            return airport.Equals("DUBLIN");
+            var searchResult = await _amadeusAPIService.SearchForAirports(airport);
+
+            return searchResult.data.Length > 0;
         }
     }
 }

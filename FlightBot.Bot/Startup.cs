@@ -30,6 +30,7 @@ namespace FlightBot.Bot
             services.AddTransient<IAirportFindingService, AirportFindingService>();
             services.AddTransient<ILuisInterpreterService, LuisInterpreterService>();
             services.AddTransient<IFlightFindingService, FlightFindingService>();
+            services.AddTransient<IAmadeusAPIService, AmadeusAPIService>();
 
             CreateConversationalState(services);
         }
