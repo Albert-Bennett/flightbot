@@ -6,25 +6,28 @@ namespace FlightBot.Services
 {
     public class AirportFindingService : IAirportFindingService
     {
-        readonly IAmadeusAPIService _amadeusAPIService;
+        readonly IGeonamesAPIService _geonamesAPIService;
 
-        public AirportFindingService(IAmadeusAPIService amadeusAPIService)
+        public AirportFindingService(IGeonamesAPIService geonamesAPIService)
         {
-            _amadeusAPIService = amadeusAPIService;
+            _geonamesAPIService = geonamesAPIService;
         }
 
         public async Task<List<string>> FindClosestAirport()
         {
+            //TODO: find a better way of getting the users IP other that using a dummy IP address 
             double latitude = 53.429174;
             double longitude = -6.238352;
 
-            var searchResult = await _amadeusAPIService.SearchForNearbyAirports(latitude, longitude);
-
+            var searchResult = await _geonamesAPIService.SearchForNearbyAirports(latitude, longitude);
             List<string> airports = new();
 
-            foreach(var airport in searchResult.data)
+            foreach (var airport in searchResult.geonames)
             {
-                airports.Add(airport.detailedName);
+                if (airport.toponymName.Contains("Airport"))
+                {
+                    airports.Add(airport.toponymName);
+                }
             }
 
             return airports;
@@ -32,9 +35,9 @@ namespace FlightBot.Services
 
         public async Task<bool> ConfirmAirportExists(string airport)
         {
-            var searchResult = await _amadeusAPIService.SearchForAirports(airport);
+            var searchResult = await _geonamesAPIService.SearchForAirports(airport);
 
-            return searchResult.data.Length > 0;
+            return searchResult.totalResultsCount > 0;
         }
     }
 }

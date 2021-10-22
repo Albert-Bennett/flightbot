@@ -17,7 +17,6 @@ namespace FlightBot.Services
         readonly HttpContent httpTokenContent;
 
         readonly int expiryModifier = 300; //represents 5 minutes in seconds
-        readonly string searchRadius;
 
         DateTime expiry;
         string token;
@@ -36,23 +35,21 @@ namespace FlightBot.Services
 
             httpClient = httpClientFactory.CreateClient("AmadeusAPI");
             httpClient.BaseAddress = new Uri(configuration["amadeus_base_url"]);
-
-            searchRadius = configuration["amadeus_search_radius"];
         }
 
-        public async Task<AmadeusNearbyAirportSearch> SearchForNearbyAirports(double latitude, double longitude)
-        {
-            string endpoint = $"reference-data/locations/airports?latitude={latitude}&longitude={longitude}&radius={searchRadius}&sort=distance";
+        //public async Task<AmadeusNearbyAirportSearch> SearchForNearbyAirports(double latitude, double longitude)
+        //{
+        //    string endpoint = $"reference-data/locations/airports?latitude={latitude}&longitude={longitude}&radius={searchRadius}&sort=distance";
 
-            return await GetFromAmadeusAPI<AmadeusNearbyAirportSearch>(endpoint);
-        }
+        //    return await GetFromAmadeusAPI<AmadeusNearbyAirportSearch>(endpoint);
+        //}
 
-        public async Task<AmadeusAirportSearch> SearchForAirports(string airport)
-        {
-            string endpoint = $"reference-data/locations?subType=AIRPORT&keyword={airport}";
+        //public async Task<AmadeusAirportSearch> SearchForAirports(string airport)
+        //{
+        //    string endpoint = $"reference-data/locations?subType=AIRPORT&keyword={airport}";
 
-            return await GetFromAmadeusAPI<AmadeusAirportSearch>(endpoint);
-        }
+        //    return await GetFromAmadeusAPI<AmadeusAirportSearch>(endpoint);
+        //}
 
         async Task<T> GetFromAmadeusAPI<T>(string endpoint) where T : new()
         {
