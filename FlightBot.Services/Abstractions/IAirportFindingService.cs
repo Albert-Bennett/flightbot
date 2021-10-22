@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using FlightBot.Services.DataModels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FlightBot.Services.Abstractions
 {
     public interface IAirportFindingService
     {
-        Task<ICollection<string>> FindClosestAirports();
+        Task<ICollection<LocationData>> FindClosestAirports();
         
-        Task<ICollection<string>> FindAssociatedAirports(string airport);
+        Task<ICollection<LocationData>> FindAssociatedAirports(string airport);
     }
 }

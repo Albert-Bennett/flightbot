@@ -6,6 +6,7 @@ using FlightBot.Services.State;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -203,7 +204,7 @@ namespace FlightBot.Services
                 MessageManager.WELCOME_MESSAGE(conversationData.NearbyAirports.Count);
 
             return conversationData.NearbyAirports.Count == 0 ? _adaptiveCardFactory.GetTextCard(message) :
-                _adaptiveCardFactory.GetCaroselCard(message, conversationData.NearbyAirports);
+                _adaptiveCardFactory.GetCaroselCard(message, conversationData.NearbyAirports.Select(x => x.AirportName).ToArray());
         }
     }
 }

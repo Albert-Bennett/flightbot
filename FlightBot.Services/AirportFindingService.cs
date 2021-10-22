@@ -14,7 +14,7 @@ namespace FlightBot.Services
             _geonamesAPIService = geonamesAPIService;
         }
 
-        public async Task<ICollection<string>> FindClosestAirports()
+        public async Task<ICollection<LocationData>> FindClosestAirports()
         {
             //TODO: find a better way of getting the users IP other that using a dummy IP address 
             double latitude = 53.429174;
@@ -24,22 +24,24 @@ namespace FlightBot.Services
             return ProcessAirpotSearchResults(searchResult.geonames);
         }
 
-        public async Task<ICollection<string>> FindAssociatedAirports(string airport)
+        public async Task<ICollection<LocationData>> FindAssociatedAirports(string airport)
         {
             var searchResult = await _geonamesAPIService.SearchForAirports(airport);
 
             return ProcessAirpotSearchResults(searchResult.geonames);
         }
 
-        private static List<string> ProcessAirpotSearchResults(Geoname[] searchResult)
+        private static List<LocationData> ProcessAirpotSearchResults(Geoname[] searchResult)
         {
-            List<string> airports = new();
+            List<LocationData> airports = new();
 
             foreach (var airport in searchResult)
             {
                 if (airport.toponymName.Contains("Airport"))
                 {
-                    airports.Add(airport.toponymName);
+                    airports.Add(airport.ToLocationData());
+
+                    //TODO: Set IATA number from search results
                 }
             }
 
