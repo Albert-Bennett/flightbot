@@ -23,18 +23,18 @@ namespace FlightBot.Services
             geonamesUsername = configuration["geonames_username"];
         }
 
-        public async Task<GeonamesNearbyAirportSearch> SearchForNearbyAirports(double latitude, double longitude)
+        public async Task<GeonamesSearchResult> SearchForNearbyAirports(double latitude, double longitude)
         {
             string endpoint = $"findNearbyJSON?lat={latitude}&lng={longitude}&fcode=AIRP&radius={searchRadius}&maxRows=10&username={geonamesUsername}";
 
-            return await GetFromGeonamesAPI<GeonamesNearbyAirportSearch>(endpoint);
+            return await GetFromGeonamesAPI<GeonamesSearchResult>(endpoint);
         }
 
-        public async Task<GeonamesAirportSearch> SearchForAirports(string airport) 
+        public async Task<GeonamesSearchResult> SearchForAirports(string airport) 
         {
             string endpoint = $"searchJSON?maxRows=10&q={airport}&username={geonamesUsername}&fcode=AIRP";
 
-            return await GetFromGeonamesAPI<GeonamesAirportSearch>(endpoint);
+            return await GetFromGeonamesAPI<GeonamesSearchResult>(endpoint);
         }
 
         async Task<T> GetFromGeonamesAPI<T>(string endpoint) where T : new()

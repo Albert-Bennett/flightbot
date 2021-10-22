@@ -5,8 +5,8 @@ namespace FlightBot.Services.Abstractions
 {
     public interface IAirportFindingService
     {
-        Task<List<string>> FindClosestAirport();
-
-        Task<bool> ConfirmAirportExists(string airport);
+        Task<ICollection<string>> FindClosestAirports();
+        
+        Task<ICollection<string>> FindAssociatedAirports(string airport);
     }
 }

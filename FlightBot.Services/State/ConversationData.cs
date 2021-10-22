@@ -6,7 +6,7 @@ namespace FlightBot.Services.State
     {
         public FlightFindingStates CurrentState { get; set; } = FlightFindingStates.FindAirport;
 
-        //Airports initially found
-        public List<string> AirportsFound { get; set; }
+        public ICollection<string> NearbyAirports { get; set; }
+        public ICollection<string> DestinationAirports { get; set; }
     }
 }

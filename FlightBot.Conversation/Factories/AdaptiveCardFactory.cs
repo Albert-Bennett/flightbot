@@ -144,7 +144,7 @@ namespace FlightBot.Conversation.Factories
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        public static Attachment GetCaroselCard(string message, IList<string> actions)
+        public static Attachment GetCaroselCard(string message, ICollection<string> actions)
         {
             AdaptiveCard card = new(defaultSchema)
             {

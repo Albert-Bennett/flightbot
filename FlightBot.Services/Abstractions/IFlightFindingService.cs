@@ -6,12 +6,12 @@ namespace FlightBot.Services.Abstractions
 {
     public interface IFlightFindingService
     {
-        Task<bool> CheckFlightsTo(string airport, string destination);
+        Task<bool> CheckFlightsTo(ICollection<string> airport, ICollection<string> destination);
 
-        Task<bool> CheckFlightsToOn(string airport, string destination, string flightDate);
+        Task<bool> CheckFlightsToOn(ICollection<string> airport, ICollection<string> destination, DateTime flightDate);
 
-        Task<ICollection<string>> FindFlights(string airport, string destination, DateTime flightDate);
+        Task<ICollection<string>> FindFlights(ICollection<string> airport, ICollection<string> destination, DateTime flightDate);
 
-        Task<ICollection<string>> FindFlights(string airport, string destination, DateTime flightDate, DateTime returnDate);
+        Task<ICollection<string>> FindFlights(ICollection<string> airport, ICollection<string> destination, DateTime flightDate, DateTime returnDate);
     }
 }
