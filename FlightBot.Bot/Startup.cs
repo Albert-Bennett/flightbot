@@ -1,4 +1,6 @@
-﻿using FlightBot.Services;
+﻿using FlightBot.Conversation.Factories;
+using FlightBot.Conversation.Factories.Abstractions;
+using FlightBot.Services;
 using FlightBot.Services.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +34,7 @@ namespace FlightBot.Bot
             services.AddTransient<IFlightFindingService, FlightFindingService>();
             services.AddTransient<IAmadeusAPIService, AmadeusAPIService>();
             services.AddTransient<IGeonamesAPIService, GeonamesAPIService>();
+            services.AddTransient<IAdaptiveCardFactory, AdaptiveCardFactory>();
 
             CreateConversationalState(services);
         }

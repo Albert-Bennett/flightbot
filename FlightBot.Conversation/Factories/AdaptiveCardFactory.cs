@@ -1,4 +1,5 @@
 ﻿using AdaptiveCards;
+using FlightBot.Conversation.Factories.Abstractions;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 using System;
@@ -6,11 +7,11 @@ using System.Collections.Generic;
 
 namespace FlightBot.Conversation.Factories
 {
-    public class AdaptiveCardFactory
+    public class AdaptiveCardFactory : IAdaptiveCardFactory
     {
-        static readonly AdaptiveSchemaVersion defaultSchema = new(1, 0);
+        readonly AdaptiveSchemaVersion defaultSchema = new(1, 0);
 
-        public static Attachment GetFoundFlightsCard(string message, ICollection<string> flights)
+        public Attachment GetFoundFlightsCard(string message, ICollection<string> flights)
         {
             var cardActions = new List<AdaptiveAction>();
 
@@ -49,7 +50,7 @@ namespace FlightBot.Conversation.Factories
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        public static Attachment GetOptionalCalanderCard(string message)
+        public Attachment GetOptionalCalanderCard(string message)
         {
             AdaptiveCard card = CreateCalanderCard(message);
             card.Actions.Add(new AdaptiveSubmitAction()
@@ -61,12 +62,12 @@ namespace FlightBot.Conversation.Factories
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        public static Attachment GetCalanderCard(string message)
+        public Attachment GetCalanderCard(string message)
         {
             return CreateAdaptiveCardAttachment(CreateCalanderCard(message).ToJson());
         }
 
-        private static AdaptiveCard CreateCalanderCard(string message)
+        private AdaptiveCard CreateCalanderCard(string message)
         {
             return new(defaultSchema)
             {
@@ -97,7 +98,7 @@ namespace FlightBot.Conversation.Factories
             };
         }
 
-        public static Attachment GetTextCard(string message)
+        public Attachment GetTextCard(string message)
         {
             AdaptiveCard card = new(defaultSchema)
             {
@@ -115,7 +116,7 @@ namespace FlightBot.Conversation.Factories
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        public static Attachment GetActionCard(string message, string action)
+        public Attachment GetActionCard(string message, string action)
         {
             AdaptiveCard card = new(defaultSchema)
             {
@@ -144,7 +145,7 @@ namespace FlightBot.Conversation.Factories
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        public static Attachment GetCaroselCard(string message, ICollection<string> actions)
+        public Attachment GetCaroselCard(string message, ICollection<string> actions)
         {
             AdaptiveCard card = new(defaultSchema)
             {
@@ -178,7 +179,7 @@ namespace FlightBot.Conversation.Factories
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        private static Attachment CreateAdaptiveCardAttachment(string jsonData)
+        private Attachment CreateAdaptiveCardAttachment(string jsonData)
         {
             var adaptiveCardAttachment = new Attachment()
             {
