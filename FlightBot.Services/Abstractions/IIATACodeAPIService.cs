@@ -5,6 +5,6 @@ namespace FlightBot.Services.Abstractions
 {
     public interface IIATACodeAPIService
     {
-        Task<IATASearchResponse> SerachForIATACodes(string searchTerm);
+        Task<IATASearchResponse> SearchForIATACodes(string searchTerm);
     }
 }

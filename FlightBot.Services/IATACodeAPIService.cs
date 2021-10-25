@@ -3,17 +3,27 @@ using FlightBot.Services.DataModels;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace FlightBot.Services
 {
     public class IATACodeAPIService : BaseAPIService, IIATACodeAPIService
     {
-        public IATACodeAPIService(IConfiguration configuration, IHttpClientFactory httpClientFactory) :
-            base(httpClientFactory, configuration["IATA_Code_API_Endpoint"]) { }
+        readonly string functionCode;
 
-        public async Task<IATASearchResponse> SerachForIATACodes(string searchTerm)
+        public IATACodeAPIService(IConfiguration configuration, IHttpClientFactory httpClientFactory) :
+            base(httpClientFactory, configuration["IATA_Code_API_Endpoint"])
         {
-            return await GetAsync<IATASearchResponse>("");
+            functionCode = configuration["IATA_API_Code"];
+        }
+
+        public async Task<IATASearchResponse> SearchForIATACodes(string searchTerm)
+        {
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query["code"] = functionCode;
+            query["airport"] = searchTerm;
+
+            return await GetAsync<IATASearchResponse>($"?{query}");
         }
     }
 }
