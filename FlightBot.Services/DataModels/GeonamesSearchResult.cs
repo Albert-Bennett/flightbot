@@ -11,5 +11,6 @@
         public double lng { get; set; }
         public double lat { get; set; }
         public string adminName1 { get; set; }
+        public string geonameId { get; set; }
     }
 }

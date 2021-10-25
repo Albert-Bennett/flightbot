@@ -82,7 +82,7 @@ namespace FlightBot.Services
 
                         var destinationAirports = await _airportFindingService.FindAssociatedAirports(destination);
 
-                        if (await _flightFindingService.CheckFlightsTo(conversationData.NearbyAirports, destinationAirports))
+                        if (destinationAirports.Count > 0)
                         {
                             userProfile.Destination = destination;
 
@@ -111,24 +111,14 @@ namespace FlightBot.Services
 
                         if (userInput > DateTime.Now)
                         {
-                            if (await _flightFindingService.CheckFlightsToOn(conversationData.NearbyAirports, conversationData.DestinationAirports, userInput))
-                            {
-                                userProfile.FlightDate = userInput;
-                                userProfile.DisplayFlightDate = displayDate;
+                            userProfile.FlightDate = userInput;
+                            userProfile.DisplayFlightDate = displayDate;
 
-                                string message = MessageManager.RETURN_FLIGHT_ASK(userProfile.Destination, displayDate);
+                            string message = MessageManager.RETURN_FLIGHT_ASK(userProfile.Destination, displayDate);
 
-                                conversationData.CurrentState = FlightFindingStates.GetReturnFlight;
+                            conversationData.CurrentState = FlightFindingStates.GetReturnFlight;
 
-                                return _adaptiveCardFactory.GetOptionalCalanderCard(message);
-                            }
-                            else
-                            {
-                                string message = MessageManager.NO_FLIGHTS_FOUND(userProfile.SelectedAirport,
-                                    userProfile.Destination, displayDate);
-
-                                return _adaptiveCardFactory.GetCalanderCard(message);
-                            }
+                            return _adaptiveCardFactory.GetOptionalCalanderCard(message);
                         }
                         else
                         {
@@ -183,7 +173,7 @@ namespace FlightBot.Services
 
                             var foundFlights = await _flightFindingService.FindFlights(
                                 conversationData.NearbyAirports, conversationData.DestinationAirports,
-                                userProfile.FlightDate);
+                                userProfile.FlightDate, null);
 
                             var message = MessageManager.FOUND_FLIGHTS(userProfile.SelectedAirport,
                                 userProfile.Destination, userProfile.DisplayFlightDate);

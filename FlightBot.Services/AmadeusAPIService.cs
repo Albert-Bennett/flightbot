@@ -4,8 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace FlightBot.Services
 {
@@ -46,6 +48,27 @@ namespace FlightBot.Services
 
         //    return await GetAsync<AmadeusAirportSearch>(endpoint, await GetTokenAsync());
         //}
+
+        public async Task<AmadeusFlightData[]> FindFlightAsync(string originIATACode, string destinationIATACode, DateTime flightDate, DateTime? returnDate)
+        {
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query["originLocationCode"] = originIATACode;
+            query["destinationLocationCode"] = destinationIATACode;
+            query["departureDate"] = flightDate.ToString("yyyy-MM-dd");
+
+            if (returnDate !=null)
+            {
+                query["returnDate"] = returnDate.Value.ToString("yyyy-MM-dd");
+            }
+
+            query["adults"] = "1";
+            query["currencyCode"] = "EUR";
+            query["max"] = "2";
+            query["travelClass"] = "ECONOMY";
+
+            var offers = await GetAsync<AmadeusFlightSearchResult>($"shopping/flight-offers?{query}", await GetTokenAsync());
+            return offers.data.OrderBy(x => x.price.grandTotal).ToArray();
+        }
 
         async Task<string> GetTokenAsync()
         {

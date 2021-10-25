@@ -17,11 +17,12 @@ namespace FlightBot.Services
             functionCode = configuration["IATA_API_Code"];
         }
 
-        public async Task<IATASearchResponse> SearchForIATACodes(string searchTerm)
+        public async Task<IATASearchResponse> SearchForIATACodes(string searchTerm, string geonameId)
         {
             var query = HttpUtility.ParseQueryString(string.Empty);
             query["code"] = functionCode;
             query["airport"] = searchTerm;
+            query["geonameId"] = geonameId;
 
             return await GetAsync<IATASearchResponse>($"?{query}");
         }

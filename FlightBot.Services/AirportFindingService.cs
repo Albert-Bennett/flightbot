@@ -39,7 +39,7 @@ namespace FlightBot.Services
 
             foreach (var airport in searchResult)
             {
-                var iataCodes = await _iataCodeAPIService.SearchForIATACodes(airport.toponymName);
+                var iataCodes = await _iataCodeAPIService.SearchForIATACodes(airport.toponymName, airport.geonameId);
 
                 if (iataCodes.SearchResults.Length > 0)
                 {
