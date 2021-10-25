@@ -34,6 +34,7 @@ namespace FlightBot.Bot
             services.AddTransient<IFlightFindingService, FlightFindingService>();
             services.AddTransient<IAmadeusAPIService, AmadeusAPIService>();
             services.AddTransient<IGeonamesAPIService, GeonamesAPIService>();
+            services.AddTransient<IIATACodeAPIService, IATACodeAPIService>();
             services.AddTransient<IAdaptiveCardFactory, AdaptiveCardFactory>();
 
             CreateConversationalState(services);
