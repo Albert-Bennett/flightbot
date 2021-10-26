@@ -32,7 +32,7 @@ namespace FlightBot.Services.DataModels
         public string total { get; set; }
         public string _base { get; set; }
         public Fee[] fees { get; set; }
-        public string grandTotal { get; set; }
+        public double grandTotal { get; set; }
     }
 
     public class Fee

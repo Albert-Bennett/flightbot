@@ -72,10 +72,11 @@ namespace FlightBot.Services
                 case FlightFindingStates.GetDestination:
                     {
                         var destination = await _textExtractorService.InterpretDestination(turnContext, cancellationToken);
+                        string message;
 
                         if (destination.Equals(string.Empty))
                         {
-                            var message = MessageManager.DESTINATION_NOT_RECOGNIZED(turnContext.Activity.Text);
+                            message = MessageManager.DESTINATION_NOT_RECOGNIZED(turnContext.Activity.Text);
 
                             return _adaptiveCardFactory.GetTextCard(message);
                         }
@@ -89,18 +90,13 @@ namespace FlightBot.Services
                             conversationData.DestinationAirports = destinationAirports;
                             conversationData.CurrentState = FlightFindingStates.GetFlightDate;
 
-                            var message = MessageManager.DESTINATON_CONFIRMED(destination);
+                            message = MessageManager.DESTINATON_CONFIRMED(destination);
                             return _adaptiveCardFactory.GetCalanderCard(message);
                         }
-                        else
-                        {
-                            conversationData.NearbyAirports = null;
-                            conversationData.CurrentState = FlightFindingStates.FindAirport;
 
-                            var message = MessageManager.DESTINATION_NOT_AVAILIBLE(userProfile.SelectedAirport, destination);
+                        message = MessageManager.DESTINATION_NOT_AVAILIBLE(userProfile.SelectedAirport, destination);
 
-                            return _adaptiveCardFactory.GetTextCard(message);
-                        }
+                        return _adaptiveCardFactory.GetTextCard(message);
                     }
 
                 case FlightFindingStates.GetFlightDate:

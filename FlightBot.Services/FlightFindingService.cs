@@ -3,6 +3,7 @@ using FlightBot.Services.Abstractions;
 using FlightBot.Services.DataModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -25,6 +26,7 @@ namespace FlightBot.Services
                 foreach(var dest in destinations) 
                 {
                     var foundFlight = await _amadeusAPIService.FindFlightAsync(origin.IATACode, dest.IATACode, flightDate, returnDate);
+                    foundFlight = foundFlight.OrderBy(x => x.price.grandTotal).ToArray();
 
                     if (foundFlight != null)
                     {

@@ -12,7 +12,7 @@ namespace FlightBot.Conversation
         public DateTime DepartureDate { get; set; }
         public int SeatsAvailible { get; set; }
         public string Currency { get; set; }
-        public string MaxPrice { get; set; }
+        public double MaxPrice { get; set; }
 
         public List<StopDetails> StopDetails { get; set; }
     }
