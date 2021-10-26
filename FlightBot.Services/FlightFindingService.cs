@@ -1,4 +1,6 @@
-﻿using FlightBot.Services.Abstractions;
+﻿using FlightBot.Conversation;
+using FlightBot.Services.Abstractions;
+using FlightBot.Services.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,28 +9,44 @@ namespace FlightBot.Services
 {
     public class FlightFindingService : IFlightFindingService
     {
-        public async Task<bool> CheckFlightsTo(string airport, string destination)
+        readonly IAmadeusAPIService _amadeusAPIService;
+        public FlightFindingService(IAmadeusAPIService amadeusAPIService)
         {
-            return airport.Equals("DUBLIN") && destination.Equals("Canada");
+            _amadeusAPIService = amadeusAPIService;
         }
 
-        public async Task<bool> CheckFlightsToOn(string airport, string destination, string flightDate)
+        public async Task<FlightCardData> FindFlights(ICollection<LocationData> origins, ICollection<LocationData> destinations, DateTime flightDate, DateTime? returnDate)
         {
-            var userInput = DateTime.Parse(flightDate);
+            FlightCardData foundFlights = null;
 
-            return airport.Equals("DUBLIN") && destination.Equals("Canada") && userInput > DateTime.Now;
-        }
+            foreach (var origin in origins)
+            {
+                foreach(var dest in destinations) 
+                {
+                    var foundFlight = await _amadeusAPIService.FindFlightAsync(origin.IATACode, dest.IATACode, flightDate, returnDate);
 
-        public async Task<ICollection<string>> FindFlights(string airport, string destination, DateTime flightDate)
-        {
-            return airport.Equals("DUBLIN") && destination.Equals("Canada") && flightDate > DateTime.Now ?
-                new List<string>() { "https://google.ie" } : new List<string>();
-        }
+                    if (foundFlight != null)
+                    {
+                        foreach (var flight in foundFlight)
+                        {
+                            foundFlights = new FlightCardData
+                            {
+                                Airport = origin.AirportName,
+                                AirportIATACode = origin.IATACode,
+                                Currency = flight.price.currency,
+                                Destination = dest.AirportName,
+                                DestinationIATACode = dest.IATACode,
+                                MaxPrice = flight.price.grandTotal,
+                                SeatsAvailible = flight.numberOfBookableSeats,
+                                DepartureDate = DateTime.Now, //should come from the flight segments
+                                DepartureGame = "1" //should come from the segments
+                            };
+                        }
+                    }
+                }
+            }
 
-        public async Task<ICollection<string>> FindFlights(string airport, string destination, DateTime flightDate, DateTime returnDate)
-        {
-            return airport.Equals("DUBLIN") && destination.Equals("Canada") && flightDate > DateTime.Now && returnDate > flightDate ?
-                new List<string>() { "https://google.ie" } : new List<string>();
+            return foundFlights; // just returning the first one and not the accumulated data 
         }
     }
 }

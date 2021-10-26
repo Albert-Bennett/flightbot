@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FlightBot.Services.DataModels;
+using System.Collections.Generic;
 
 namespace FlightBot.Services.State
 {
@@ -6,7 +7,7 @@ namespace FlightBot.Services.State
     {
         public FlightFindingStates CurrentState { get; set; } = FlightFindingStates.FindAirport;
 
-        //Airports initially found
-        public List<string> AirportsFound { get; set; }
+        public ICollection<LocationData> NearbyAirports { get; set; }
+        public ICollection<LocationData> DestinationAirports { get; set; }
     }
 }

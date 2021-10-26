@@ -1,11 +1,12 @@
 ﻿using FlightBot.Conversation;
 using FlightBot.Conversation.Extensions;
-using FlightBot.Conversation.Factories;
+using FlightBot.Conversation.Factories.Abstractions;
 using FlightBot.Services.Abstractions;
 using FlightBot.Services.State;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,13 +17,16 @@ namespace FlightBot.Services
         readonly IAirportFindingService _airportFindingService;
         readonly ILuisInterpreterService _textExtractorService;
         readonly IFlightFindingService _flightFindingService;
+        readonly IAdaptiveCardFactory _adaptiveCardFactory;
 
         public StateManagerService(IAirportFindingService airportFindingService,
-            ILuisInterpreterService textExtractorService, IFlightFindingService flightFindingService)
+            ILuisInterpreterService textExtractorService, IFlightFindingService flightFindingService,
+            IAdaptiveCardFactory adaptiveCardFactory)
         {
             _airportFindingService = airportFindingService;
             _textExtractorService = textExtractorService;
             _flightFindingService = flightFindingService;
+            _adaptiveCardFactory = adaptiveCardFactory;
         }
 
         public async Task<Attachment> GenerateCurentState(UserProfile userProfile,
@@ -34,29 +38,32 @@ namespace FlightBot.Services
                     {
                         var userInput = turnContext.Activity.Text;
 
-                        if (conversationData.AirportsFound == null)
+                        if (conversationData.NearbyAirports == null)
                         {
                             return await FindClosestAirports(conversationData);
                         }
-                        else if (userInput.Equals(MessageManager.NO_SUITABLE_FLIGHTS)) 
+                        else if (userInput.Equals(MessageManager.NO_SUITABLE_FLIGHTS))
                         {
                             return await FindClosestAirports(conversationData, true);
                         }
-                        else if (conversationData.AirportsFound != null && !string.IsNullOrEmpty(userInput))
+                        else if (conversationData.NearbyAirports != null && !string.IsNullOrEmpty(userInput))
                         {
-                            if (await _airportFindingService.ConfirmAirportExists(userInput))
+                            var searchResult = await _airportFindingService.FindAssociatedAirports(userInput);
+
+                            if (searchResult.Count > 0)
                             {
+                                conversationData.NearbyAirports = searchResult;
                                 userProfile.SelectedAirport = userInput;
 
                                 conversationData.CurrentState = FlightFindingStates.GetDestination;
 
                                 var message = MessageManager.AIRPORT_CONFIRMED;
-                                return AdaptiveCardFactory.GetTextCard(message);
+                                return _adaptiveCardFactory.GetTextCard(message);
                             }
                             else
                             {
                                 var message = MessageManager.AIRPORT_NOT_FOUND;
-                                return AdaptiveCardFactory.GetTextCard(message);
+                                return _adaptiveCardFactory.GetTextCard(message);
                             }
                         }
                     }
@@ -66,31 +73,33 @@ namespace FlightBot.Services
                     {
                         var destination = await _textExtractorService.InterpretDestination(turnContext, cancellationToken);
 
-                        if (destination.Equals(string.Empty)) 
+                        if (destination.Equals(string.Empty))
                         {
                             var message = MessageManager.DESTINATION_NOT_RECOGNIZED(turnContext.Activity.Text);
 
-                            return AdaptiveCardFactory.GetTextCard(message);
+                            return _adaptiveCardFactory.GetTextCard(message);
                         }
 
-                        var airport = userProfile.SelectedAirport;
+                        var destinationAirports = await _airportFindingService.FindAssociatedAirports(destination);
 
-                        if (await _flightFindingService.CheckFlightsTo(airport, destination))
+                        if (destinationAirports.Count > 0)
                         {
                             userProfile.Destination = destination;
+
+                            conversationData.DestinationAirports = destinationAirports;
                             conversationData.CurrentState = FlightFindingStates.GetFlightDate;
 
                             var message = MessageManager.DESTINATON_CONFIRMED(destination);
-                            return AdaptiveCardFactory.GetCalanderCard(message);
+                            return _adaptiveCardFactory.GetCalanderCard(message);
                         }
                         else
                         {
-                            conversationData.AirportsFound = null;
+                            conversationData.NearbyAirports = null;
                             conversationData.CurrentState = FlightFindingStates.FindAirport;
 
-                            var message = MessageManager.DESTINATION_NOT_AVAILIBLE(airport, destination);
+                            var message = MessageManager.DESTINATION_NOT_AVAILIBLE(userProfile.SelectedAirport, destination);
 
-                            return AdaptiveCardFactory.GetTextCard(message);
+                            return _adaptiveCardFactory.GetTextCard(message);
                         }
                     }
 
@@ -102,30 +111,20 @@ namespace FlightBot.Services
 
                         if (userInput > DateTime.Now)
                         {
-                            if (await _flightFindingService.CheckFlightsToOn(userProfile.SelectedAirport, userProfile.Destination, displayDate))
-                            {
-                                userProfile.FlightDate = userInput;
-                                userProfile.DisplayFlightDate = displayDate;
+                            userProfile.FlightDate = userInput;
+                            userProfile.DisplayFlightDate = displayDate;
 
-                                string message = MessageManager.RETURN_FLIGHT_ASK(userProfile.Destination, displayDate);
+                            string message = MessageManager.RETURN_FLIGHT_ASK(userProfile.Destination, displayDate);
 
-                                conversationData.CurrentState = FlightFindingStates.GetReturnFlight;
+                            conversationData.CurrentState = FlightFindingStates.GetReturnFlight;
 
-                                return AdaptiveCardFactory.GetOptionalCalanderCard(message);
-                            }
-                            else
-                            {
-                                string message = MessageManager.NO_FLIGHTS_FOUND(userProfile.SelectedAirport, 
-                                    userProfile.Destination, displayDate);
-
-                                return AdaptiveCardFactory.GetCalanderCard(message);
-                            }
+                            return _adaptiveCardFactory.GetOptionalCalanderCard(message);
                         }
                         else
                         {
                             string message = MessageManager.RECONFIRM_DATE(userProfile.Destination, displayDate);
 
-                            return AdaptiveCardFactory.GetCalanderCard(message);
+                            return _adaptiveCardFactory.GetCalanderCard(message);
                         }
                     }
 
@@ -143,28 +142,28 @@ namespace FlightBot.Services
                             {
                                 string message = MessageManager.INVALID_RETURN_DATE(userProfile.DisplayFlightDate, displayDate);
 
-                                return AdaptiveCardFactory.GetCalanderCard(message);
+                                return _adaptiveCardFactory.GetCalanderCard(message);
                             }
                             else
                             {
                                 var foundFlights = await _flightFindingService.FindFlights(
-                                    userProfile.SelectedAirport, userProfile.Destination,
+                                    conversationData.NearbyAirports, conversationData.DestinationAirports,
                                     userProfile.FlightDate, returnDate);
 
-                                if (foundFlights.Count == 0)
+                                if (foundFlights == null)
                                 {
                                     string message = MessageManager.RECONFIRM_DATE(userProfile.Destination, displayDate);
 
-                                    return AdaptiveCardFactory.GetCalanderCard(message);
+                                    return _adaptiveCardFactory.GetCalanderCard(message);
                                 }
                                 else
                                 {
                                     conversationData.CurrentState = FlightFindingStates.FindAirport;
 
-                                    var message = MessageManager.FOUND_RETURN_FLIGHTS(userProfile.SelectedAirport, 
+                                    var message = MessageManager.FOUND_RETURN_FLIGHTS(userProfile.SelectedAirport,
                                         userProfile.Destination, userProfile.DisplayFlightDate, displayDate);
 
-                                    return AdaptiveCardFactory.GetFoundFlightsCard(message, foundFlights);
+                                    return _adaptiveCardFactory.GetFoundFlightsCard(foundFlights);
                                 }
                             }
                         }
@@ -173,13 +172,13 @@ namespace FlightBot.Services
                             conversationData.CurrentState = FlightFindingStates.FindAirport;
 
                             var foundFlights = await _flightFindingService.FindFlights(
-                                userProfile.SelectedAirport, userProfile.Destination,
-                                userProfile.FlightDate);
+                                conversationData.NearbyAirports, conversationData.DestinationAirports,
+                                userProfile.FlightDate, null);
 
-                            var message = MessageManager.FOUND_FLIGHTS(userProfile.SelectedAirport, 
+                            var message = MessageManager.FOUND_FLIGHTS(userProfile.SelectedAirport,
                                 userProfile.Destination, userProfile.DisplayFlightDate);
 
-                            return AdaptiveCardFactory.GetFoundFlightsCard(message, foundFlights);
+                            return _adaptiveCardFactory.GetFoundFlightsCard(foundFlights);
                         }
                     }
             }
@@ -189,14 +188,13 @@ namespace FlightBot.Services
 
         private async Task<Attachment> FindClosestAirports(ConversationData conversationData, bool isRestarting = false)
         {
-            var airports = await _airportFindingService.FindClosestAirport();
-            conversationData.AirportsFound = airports;
+            conversationData.NearbyAirports = await _airportFindingService.FindClosestAirports();
 
-            var message = isRestarting? MessageManager.RESTART_MESSAGE(airports.Count) : 
-                MessageManager.WELCOME_MESSAGE(airports.Count);
+            var message = isRestarting ? MessageManager.RESTART_MESSAGE(conversationData.NearbyAirports.Count) :
+                MessageManager.WELCOME_MESSAGE(conversationData.NearbyAirports.Count);
 
-            return airports.Count==0? AdaptiveCardFactory.GetTextCard(message) :
-                AdaptiveCardFactory.GetCaroselCard(message, airports);
+            return conversationData.NearbyAirports.Count == 0 ? _adaptiveCardFactory.GetTextCard(message) :
+                _adaptiveCardFactory.GetCaroselCard(message, conversationData.NearbyAirports.Select(x => x.AirportName).ToArray());
         }
     }
 }

@@ -1,47 +1,82 @@
 ﻿using AdaptiveCards;
+using FlightBot.Conversation.Factories.Abstractions;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace FlightBot.Conversation.Factories
 {
-    public class AdaptiveCardFactory
+    public class AdaptiveCardFactory : IAdaptiveCardFactory
     {
-        static readonly AdaptiveSchemaVersion defaultSchema = new(1, 0);
+        readonly AdaptiveSchemaVersion defaultSchema = new(1, 0);
 
-        public static Attachment GetFoundFlightsCard(string message, ICollection<string> flights)
+        public Attachment GetFoundFlightsCard(FlightCardData flightCardData)
         {
-            var cardActions = new List<AdaptiveAction>();
-
-            foreach (var f in flights)
-            {
-                cardActions.Add(new AdaptiveOpenUrlAction
-                {
-                    Title = f,
-                    Url = new Uri(f)
-                });
-            }
-
-            cardActions.Add(new AdaptiveSubmitAction
-            {
-                Title = Messages.NO_SUITABLE_FLIGHTS,
-                Data = Messages.NO_SUITABLE_FLIGHTS
-            });
+            string description = "";
 
             AdaptiveCard card = new(defaultSchema)
             {
                 Body = new List<AdaptiveElement>
-                {
-                    new AdaptiveTextBlock
                     {
-                        Text = message,
-                        Size = AdaptiveTextSize.Default,
-                        Wrap = true
+                        new AdaptiveTextBlock
+                        {
+                             Size = AdaptiveTextSize.Medium,
+                             Weight = AdaptiveTextWeight.Bolder,
+                             Text = $"{flightCardData.AirportIATACode} to {flightCardData.DestinationIATACode}"
+                        },
+                        new AdaptiveColumnSet
+                        {
+                           Columns = new List<AdaptiveColumn>
+                           {
+                               new AdaptiveColumn
+                               {
+                                   Items = new List<AdaptiveElement>
+                                   {
+                                         new AdaptiveImage
+                                         {
+                                              Style = AdaptiveImageStyle.Person,
+                                              Url = new Uri($"{Environment.CurrentDirectory}/airplane-icon.png"),
+                                              Size = AdaptiveImageSize.Small
+                                         }
+                                   },
+                                   Width = "auto"
+                               },
+                               new AdaptiveColumn
+                               {
+                                   Items = new List<AdaptiveElement>
+                                   {
+                                       new AdaptiveTextBlock
+                                       {
+                                           Weight = AdaptiveTextWeight.Bolder,
+                                           Wrap = true,
+                                           Text = $"Your flight from {flightCardData.Airport} to {flightCardData.Destination}"
+                                       },
+                                       new AdaptiveTextBlock
+                                       {
+                                           Spacing= AdaptiveSpacing.None,
+                                           IsSubtle = true,
+                                           Wrap = true,
+                                           Text = $"Departure Date: {flightCardData.DepartureDate:dd-MM-yyyy HH:mm}"
+                                       }
+                                   },
+                                   Width = "stretch"
+                               }
+                           }
+                        },
+                        new AdaptiveTextBlock
+                        {
+                            Text = description,
+                             Wrap = true
+                        }
                     },
-                    new AdaptiveActionSet
+                Actions = new List<AdaptiveAction>
+                {
+                    new AdaptiveOpenUrlAction
                     {
-                        Actions = cardActions
+                        Url = new Uri("https://www.google.ie"),
+                        Title = "Book this flight"
                     }
                 }
             };
@@ -49,7 +84,46 @@ namespace FlightBot.Conversation.Factories
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        public static Attachment GetOptionalCalanderCard(string message)
+        //public Attachment GetFoundFlightsCard(string message, ICollection<string> flights)
+        //{
+        //    var cardActions = new List<AdaptiveAction>();
+
+        //    foreach (var f in flights)
+        //    {
+        //        cardActions.Add(new AdaptiveOpenUrlAction
+        //        {
+        //            Title = f,
+        //            Url = new Uri(f)
+        //        });
+        //    }
+
+        //    cardActions.Add(new AdaptiveSubmitAction
+        //    {
+        //        Title = Messages.NO_SUITABLE_FLIGHTS,
+        //        Data = Messages.NO_SUITABLE_FLIGHTS
+        //    });
+
+        //    AdaptiveCard card = new(defaultSchema)
+        //    {
+        //        Body = new List<AdaptiveElement>
+        //        {
+        //            new AdaptiveTextBlock
+        //            {
+        //                Text = message,
+        //                Size = AdaptiveTextSize.Default,
+        //                Wrap = true
+        //            },
+        //            new AdaptiveActionSet
+        //            {
+        //                Actions = cardActions
+        //            }
+        //        }
+        //    };
+
+        //    return CreateAdaptiveCardAttachment(card.ToJson());
+        //}
+
+        public Attachment GetOptionalCalanderCard(string message)
         {
             AdaptiveCard card = CreateCalanderCard(message);
             card.Actions.Add(new AdaptiveSubmitAction()
@@ -61,12 +135,12 @@ namespace FlightBot.Conversation.Factories
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        public static Attachment GetCalanderCard(string message)
+        public Attachment GetCalanderCard(string message)
         {
             return CreateAdaptiveCardAttachment(CreateCalanderCard(message).ToJson());
         }
 
-        private static AdaptiveCard CreateCalanderCard(string message)
+        private AdaptiveCard CreateCalanderCard(string message)
         {
             return new(defaultSchema)
             {
@@ -97,7 +171,7 @@ namespace FlightBot.Conversation.Factories
             };
         }
 
-        public static Attachment GetTextCard(string message)
+        public Attachment GetTextCard(string message)
         {
             AdaptiveCard card = new(defaultSchema)
             {
@@ -115,7 +189,7 @@ namespace FlightBot.Conversation.Factories
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        public static Attachment GetActionCard(string message, string action)
+        public Attachment GetActionCard(string message, string action)
         {
             AdaptiveCard card = new(defaultSchema)
             {
@@ -144,7 +218,7 @@ namespace FlightBot.Conversation.Factories
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        public static Attachment GetCaroselCard(string message, IList<string> actions)
+        public Attachment GetCaroselCard(string message, ICollection<string> data)
         {
             AdaptiveCard card = new(defaultSchema)
             {
@@ -158,6 +232,8 @@ namespace FlightBot.Conversation.Factories
                     }
                 }
             };
+
+            List<string> actions = new(data);
 
             actions.Add(Messages.NONE_OF_THESE);
 
@@ -178,7 +254,7 @@ namespace FlightBot.Conversation.Factories
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        private static Attachment CreateAdaptiveCardAttachment(string jsonData)
+        private Attachment CreateAdaptiveCardAttachment(string jsonData)
         {
             var adaptiveCardAttachment = new Attachment()
             {

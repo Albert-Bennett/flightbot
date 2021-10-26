@@ -4,25 +4,25 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace FlightBot.Services
 {
-    public class AmadeusAPIService : IAmadeusAPIService
+    public class AmadeusAPIService : BaseAPIService, IAmadeusAPIService
     {
         readonly HttpClient httpTokenClient;
-        readonly HttpClient httpClient;
         readonly HttpContent httpTokenContent;
 
         readonly int expiryModifier = 300; //represents 5 minutes in seconds
-        readonly string searchRadius;
 
         DateTime expiry;
         string token;
 
-        public AmadeusAPIService(IConfiguration configuration, IHttpClientFactory httpClientFactory)
+        public AmadeusAPIService(IConfiguration configuration, IHttpClientFactory httpClientFactory):
+            base(httpClientFactory, configuration["amadeus_base_url"])
         {
             httpTokenClient = httpClientFactory.CreateClient("AmadeusToken");
             httpTokenClient.BaseAddress = new Uri(configuration["amadeus_token_url"]);
@@ -33,41 +33,41 @@ namespace FlightBot.Services
                 { "client_secret", configuration["amadeus_client_secret"] },
                 { "grant_type", "client_credentials" }
             });
-
-            httpClient = httpClientFactory.CreateClient("AmadeusAPI");
-            httpClient.BaseAddress = new Uri(configuration["amadeus_base_url"]);
-
-            searchRadius = configuration["amadeus_search_radius"];
         }
 
-        public async Task<AmadeusNearbyAirportSearch> SearchForNearbyAirports(double latitude, double longitude)
+        //public async Task<AmadeusNearbyAirportSearch> SearchForNearbyAirports(double latitude, double longitude)
+        //{
+        //    string endpoint = $"reference-data/locations/airports?latitude={latitude}&longitude={longitude}&radius={searchRadius}&sort=distance";
+
+        //    return await GetAsync<AmadeusNearbyAirportSearch>(endpoint, await GetTokenAsync());
+        //}
+
+        //public async Task<AmadeusAirportSearch> SearchForAirports(string airport)
+        //{
+        //    string endpoint = $"reference-data/locations?subType=AIRPORT&keyword={airport}";
+
+        //    return await GetAsync<AmadeusAirportSearch>(endpoint, await GetTokenAsync());
+        //}
+
+        public async Task<AmadeusFlightData[]> FindFlightAsync(string originIATACode, string destinationIATACode, DateTime flightDate, DateTime? returnDate)
         {
-            string endpoint = $"reference-data/locations/airports?latitude={latitude}&longitude={longitude}&radius={searchRadius}&sort=distance";
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query["originLocationCode"] = originIATACode;
+            query["destinationLocationCode"] = destinationIATACode;
+            query["departureDate"] = flightDate.ToString("yyyy-MM-dd");
 
-            return await GetFromAmadeusAPI<AmadeusNearbyAirportSearch>(endpoint);
-        }
-
-        public async Task<AmadeusAirportSearch> SearchForAirports(string airport)
-        {
-            string endpoint = $"reference-data/locations?subType=AIRPORT&keyword={airport}";
-
-            return await GetFromAmadeusAPI<AmadeusAirportSearch>(endpoint);
-        }
-
-        async Task<T> GetFromAmadeusAPI<T>(string endpoint) where T : new()
-        {
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                await GetTokenAsync());
-
-            var response = await httpClient.GetAsync(endpoint);
-
-            if (response.IsSuccessStatusCode)
+            if (returnDate !=null)
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<T>(responseContent);
+                query["returnDate"] = returnDate.Value.ToString("yyyy-MM-dd");
             }
 
-            throw new HttpRequestException($"Failed to get data from  the Amadeus API: {endpoint}. Status code: {response.StatusCode}");
+            query["adults"] = "1";
+            query["currencyCode"] = "EUR";
+            query["max"] = "2";
+            query["travelClass"] = "ECONOMY";
+
+            var offers = await GetAsync<AmadeusFlightSearchResult>($"shopping/flight-offers?{query}", await GetTokenAsync());
+            return offers.data.OrderBy(x => x.price.grandTotal).ToArray();
         }
 
         async Task<string> GetTokenAsync()
