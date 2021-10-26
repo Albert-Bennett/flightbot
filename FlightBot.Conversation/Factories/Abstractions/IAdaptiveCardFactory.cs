@@ -5,7 +5,7 @@ namespace FlightBot.Conversation.Factories.Abstractions
 {
     public interface IAdaptiveCardFactory
     {
-        Attachment GetFoundFlightsCard(string message, ICollection<string> flights);
+        Attachment GetFoundFlightsCard(FlightCardData flightCardData);
         Attachment GetOptionalCalanderCard(string message);
         Attachment GetCalanderCard(string message);
         Attachment GetTextCard(string message);

@@ -150,7 +150,7 @@ namespace FlightBot.Services
                                     conversationData.NearbyAirports, conversationData.DestinationAirports,
                                     userProfile.FlightDate, returnDate);
 
-                                if (foundFlights.Count == 0)
+                                if (foundFlights == null)
                                 {
                                     string message = MessageManager.RECONFIRM_DATE(userProfile.Destination, displayDate);
 
@@ -163,7 +163,7 @@ namespace FlightBot.Services
                                     var message = MessageManager.FOUND_RETURN_FLIGHTS(userProfile.SelectedAirport,
                                         userProfile.Destination, userProfile.DisplayFlightDate, displayDate);
 
-                                    return _adaptiveCardFactory.GetFoundFlightsCard(message, foundFlights);
+                                    return _adaptiveCardFactory.GetFoundFlightsCard(foundFlights);
                                 }
                             }
                         }
@@ -178,7 +178,7 @@ namespace FlightBot.Services
                             var message = MessageManager.FOUND_FLIGHTS(userProfile.SelectedAirport,
                                 userProfile.Destination, userProfile.DisplayFlightDate);
 
-                            return _adaptiveCardFactory.GetFoundFlightsCard(message, foundFlights);
+                            return _adaptiveCardFactory.GetFoundFlightsCard(foundFlights);
                         }
                     }
             }
