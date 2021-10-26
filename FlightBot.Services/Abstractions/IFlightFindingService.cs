@@ -8,6 +8,6 @@ namespace FlightBot.Services.Abstractions
 {
     public interface IFlightFindingService
     {
-        Task<FlightCardData> FindFlights(ICollection<LocationData> origins, ICollection<LocationData> destinations, DateTime flightDate, DateTime? returnDate);
+        Task<ICollection<FlightCardData>> FindFlights(ICollection<LocationData> origins, ICollection<LocationData> destinations, DateTime flightDate, DateTime? returnDate);
     }
 }

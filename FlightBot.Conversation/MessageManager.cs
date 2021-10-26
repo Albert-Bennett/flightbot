@@ -28,17 +28,6 @@
             Messages.INVALID_RETURN_DATE.
                 Replace(ReplaceTokens.ReturnDate, returnDate).
                 Replace(ReplaceTokens.FlightDate, flightDate);
-        public static string FOUND_RETURN_FLIGHTS(string airport, string destination, string flightDate, string returnDate)=>
-            Messages.FOUND_RETURN_FLIGHTS.
-                Replace(ReplaceTokens.Destination, destination).
-                Replace(ReplaceTokens.FlightDate, flightDate).
-                Replace(ReplaceTokens.Airport, airport).
-                Replace(ReplaceTokens.ReturnDate, returnDate);
-        public static string FOUND_FLIGHTS(string airport, string destination, string flightDate)=>
-        Messages.FOUND_FLIGHTS.
-            Replace(ReplaceTokens.Destination, destination).
-            Replace(ReplaceTokens.FlightDate, flightDate).
-            Replace(ReplaceTokens.Airport, airport);
         public static string WELCOME_MESSAGE(int airportsFound) =>
             airportsFound == 0 ? Messages.WELCOME_MESSAGE.Replace(ReplaceTokens.AirportResponse, Messages.FOUND_NO_AIRPORTS) :
             airportsFound == 1 ? Messages.WELCOME_MESSAGE.Replace(ReplaceTokens.AirportResponse, Messages.FOUND_ONE_AIRPORT) :
