@@ -9,22 +9,22 @@ namespace FlightBot.Services
 {
     public class IATACodeAPIService : BaseAPIService, IIATACodeAPIService
     {
-        readonly string functionCode;
+        readonly string searchForIATACodeFunctionCode;
 
         public IATACodeAPIService(IConfiguration configuration, IHttpClientFactory httpClientFactory) :
             base(httpClientFactory, configuration["IATA_Code_API_Endpoint"])
         {
-            functionCode = configuration["IATA_API_Code"];
+            searchForIATACodeFunctionCode = configuration["IATA_API_IATAFunctionCode"];
         }
 
         public async Task<IATASearchResponse> SearchForIATACodes(string searchTerm, string geonameId)
         {
             var query = HttpUtility.ParseQueryString(string.Empty);
-            query["code"] = functionCode;
+            query["code"] = searchForIATACodeFunctionCode;
             query["airport"] = searchTerm;
             query["geonameId"] = geonameId;
 
             return await GetAsync<IATASearchResponse>($"?{query}");
-        }
+        }        
     }
 }

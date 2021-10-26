@@ -35,20 +35,6 @@ namespace FlightBot.Services
             });
         }
 
-        //public async Task<AmadeusNearbyAirportSearch> SearchForNearbyAirports(double latitude, double longitude)
-        //{
-        //    string endpoint = $"reference-data/locations/airports?latitude={latitude}&longitude={longitude}&radius={searchRadius}&sort=distance";
-
-        //    return await GetAsync<AmadeusNearbyAirportSearch>(endpoint, await GetTokenAsync());
-        //}
-
-        //public async Task<AmadeusAirportSearch> SearchForAirports(string airport)
-        //{
-        //    string endpoint = $"reference-data/locations?subType=AIRPORT&keyword={airport}";
-
-        //    return await GetAsync<AmadeusAirportSearch>(endpoint, await GetTokenAsync());
-        //}
-
         public async Task<AmadeusFlightData[]> FindFlightAsync(string originIATACode, string destinationIATACode, DateTime flightDate, DateTime? returnDate)
         {
             var query = HttpUtility.ParseQueryString(string.Empty);
@@ -63,8 +49,8 @@ namespace FlightBot.Services
 
             query["adults"] = "1";
             query["currencyCode"] = "EUR";
-            query["max"] = "2";
             query["travelClass"] = "ECONOMY";
+            query["max"] = "5";
 
             var offers = await GetAsync<AmadeusFlightSearchResult>($"shopping/flight-offers?{query}", await GetTokenAsync());
             return offers.data.OrderBy(x => x.price.grandTotal).ToArray();

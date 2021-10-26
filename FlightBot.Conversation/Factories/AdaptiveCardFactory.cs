@@ -4,7 +4,6 @@ using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace FlightBot.Conversation.Factories
 {
@@ -12,116 +11,164 @@ namespace FlightBot.Conversation.Factories
     {
         readonly AdaptiveSchemaVersion defaultSchema = new(1, 0);
 
-        public Attachment GetFoundFlightsCard(FlightCardData flightCardData)
+        public Attachment GetFoundFlightsCard(ICollection<FlightCardData> flightCardData)
         {
-            string description = "";
-
             AdaptiveCard card = new(defaultSchema)
             {
-                Body = new List<AdaptiveElement>
-                    {
-                        new AdaptiveTextBlock
-                        {
-                             Size = AdaptiveTextSize.Medium,
-                             Weight = AdaptiveTextWeight.Bolder,
-                             Text = $"{flightCardData.AirportIATACode} to {flightCardData.DestinationIATACode}"
-                        },
-                        new AdaptiveColumnSet
-                        {
-                           Columns = new List<AdaptiveColumn>
-                           {
-                               new AdaptiveColumn
-                               {
-                                   Items = new List<AdaptiveElement>
-                                   {
-                                         new AdaptiveImage
-                                         {
-                                              Style = AdaptiveImageStyle.Person,
-                                              Url = new Uri($"{Environment.CurrentDirectory}/airplane-icon.png"),
-                                              Size = AdaptiveImageSize.Small
-                                         }
-                                   },
-                                   Width = "auto"
-                               },
-                               new AdaptiveColumn
-                               {
-                                   Items = new List<AdaptiveElement>
-                                   {
-                                       new AdaptiveTextBlock
-                                       {
-                                           Weight = AdaptiveTextWeight.Bolder,
-                                           Wrap = true,
-                                           Text = $"Your flight from {flightCardData.Airport} to {flightCardData.Destination}"
-                                       },
-                                       new AdaptiveTextBlock
-                                       {
-                                           Spacing= AdaptiveSpacing.None,
-                                           IsSubtle = true,
-                                           Wrap = true,
-                                           Text = $"Departure Date: {flightCardData.DepartureDate:dd-MM-yyyy HH:mm}"
-                                       }
-                                   },
-                                   Width = "stretch"
-                               }
-                           }
-                        },
-                        new AdaptiveTextBlock
-                        {
-                            Text = description,
-                             Wrap = true
-                        }
-                    },
-                Actions = new List<AdaptiveAction>
-                {
-                    new AdaptiveOpenUrlAction
-                    {
-                        Url = new Uri("https://www.google.ie"),
-                        Title = "Book this flight"
-                    }
-                }
+                Body = new (),
+                Actions = new ()
             };
+
+            foreach (var flight in flightCardData)
+            {
+                card.Body.AddRange(CreateFlightCard(flight));
+                card.Actions.Add(new AdaptiveOpenUrlAction
+                {
+                    Url = new Uri("https://www.google.ie"),
+                    Title = $"Book the Flight for {flight.Currency} {flight.MaxPrice} on {flight.DepartureDate}"
+                });
+            }
+
+            card.Actions.Add(new AdaptiveSubmitAction
+            {
+                Title = Messages.NO_SUITABLE_FLIGHTS,
+                Data = Messages.NO_SUITABLE_FLIGHTS
+            });
 
             return CreateAdaptiveCardAttachment(card.ToJson());
         }
 
-        //public Attachment GetFoundFlightsCard(string message, ICollection<string> flights)
-        //{
-        //    var cardActions = new List<AdaptiveAction>();
+        List<AdaptiveElement> CreateFlightCard(FlightCardData flightData)
+        {
+            string description = $"This flight costs {flightData.Currency} {flightData.MaxPrice}, has {flightData.StopDetails.Count} stops";
 
-        //    foreach (var f in flights)
-        //    {
-        //        cardActions.Add(new AdaptiveOpenUrlAction
-        //        {
-        //            Title = f,
-        //            Url = new Uri(f)
-        //        });
-        //    }
+            var flightCardElements = new List<AdaptiveElement>
+            {
+                new AdaptiveTextBlock
+                {
+                        Size = AdaptiveTextSize.Medium,
+                        Weight = AdaptiveTextWeight.Bolder,
+                        Text = $"{flightData.AirportIATACode} to {flightData.DestinationIATACode}"
+                },
+                new AdaptiveColumnSet
+                {
+                    Columns = new List<AdaptiveColumn>
+                    {
+                        new AdaptiveColumn
+                        {
+                            Items = new List<AdaptiveElement>
+                            {
+                                    new AdaptiveImage
+                                    {
+                                        Style = AdaptiveImageStyle.Person,
+                                        Url = new Uri($"{Environment.CurrentDirectory}/airplane-icon.png"),
+                                        Size = AdaptiveImageSize.Medium
+                                    }
+                            },
+                            Width = "auto"
+                        },
+                        new AdaptiveColumn
+                        {
+                            Items = new List<AdaptiveElement>
+                            {
+                                new AdaptiveTextBlock
+                                {
+                                    Weight = AdaptiveTextWeight.Bolder,
+                                    Wrap = true,
+                                    Text = $"Your flight from {flightData.Airport} to {flightData.Destination}"
+                                },
+                                new AdaptiveTextBlock
+                                {
+                                    Spacing= AdaptiveSpacing.None,
+                                    IsSubtle = true,
+                                    Wrap = true,
+                                    Text = $"Departure Date: {flightData.DepartureDate:dd-MM-yyyy HH:mm}"
+                                }
+                            },
+                            Width = "stretch"
+                        }
+                    }
+                }
+            };
 
-        //    cardActions.Add(new AdaptiveSubmitAction
-        //    {
-        //        Title = Messages.NO_SUITABLE_FLIGHTS,
-        //        Data = Messages.NO_SUITABLE_FLIGHTS
-        //    });
+            foreach (StopDetails stop in flightData.StopDetails)
+            {
+                flightCardElements.Add(new AdaptiveTextBlock
+                {
+                    Text = $"Duration: {stop.Duration}",
+                    Wrap = true
+                });
 
-        //    AdaptiveCard card = new(defaultSchema)
-        //    {
-        //        Body = new List<AdaptiveElement>
-        //        {
-        //            new AdaptiveTextBlock
-        //            {
-        //                Text = message,
-        //                Size = AdaptiveTextSize.Default,
-        //                Wrap = true
-        //            },
-        //            new AdaptiveActionSet
-        //            {
-        //                Actions = cardActions
-        //            }
-        //        }
-        //    };
+                foreach (var stopSegment in stop.Segments)
+                {
+                    flightCardElements.Add(CreateFlightStopDetails(stopSegment));
+                }
+            }
 
-        //    return CreateAdaptiveCardAttachment(card.ToJson());
-        //}
+            flightCardElements.Add(new AdaptiveTextBlock
+            {
+                Text = description,
+                Wrap = true
+            });
+
+            return flightCardElements;
+        }
+
+        AdaptiveColumnSet CreateFlightStopDetails(StopSegment stopDetails)
+        {
+            string arrivalText = $"Arrival time: {stopDetails.ArivialDate}. Arriving at: {stopDetails.ArivialIATACode}";
+            arrivalText += stopDetails.ArivialTerminal == null ? "." : $", terminal: {stopDetails.ArivialTerminal}.";
+
+            string departureText = $"Departure time: {stopDetails.DepartureDate}. Departing from: {stopDetails.DepartureIATACode}";
+            departureText += stopDetails.DepartureTerminal == null ? "." : $", terminal: {stopDetails.DepartureTerminal}.";
+
+            return new AdaptiveColumnSet
+            {
+                Columns = new List<AdaptiveColumn>
+            {
+                new AdaptiveColumn
+                {
+                    Items = new List<AdaptiveElement>
+                    {
+                            new AdaptiveImage
+                            {
+                                Style = AdaptiveImageStyle.Person,
+                                Url = new Uri($"{Environment.CurrentDirectory}/airplane-icon.png"),
+                                Size = AdaptiveImageSize.Small
+                            }
+                    },
+                    Width = "auto"
+                },
+                new AdaptiveColumn
+                {
+                    Items = new List<AdaptiveElement>
+                    {
+                        new AdaptiveTextBlock
+                        {
+                            Weight = AdaptiveTextWeight.Bolder,
+                            Wrap = true,
+                            Text = $"Duration: {stopDetails.Duration}."
+                        },
+                        new AdaptiveTextBlock
+                        {
+                            Spacing= AdaptiveSpacing.None,
+                            IsSubtle = true,
+                            Wrap = true,
+                            Text = departureText
+                        },
+                        new AdaptiveTextBlock
+                        {
+                            Spacing= AdaptiveSpacing.None,
+                            IsSubtle = true,
+                            Wrap = true,
+                            Text = arrivalText
+                        }
+                    },
+                    Width = "stretch"
+                }
+                }
+            };
+        }
 
         public Attachment GetOptionalCalanderCard(string message)
         {
