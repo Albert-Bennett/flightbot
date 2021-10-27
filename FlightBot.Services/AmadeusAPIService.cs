@@ -44,7 +44,7 @@ namespace FlightBot.Services
             query["destinationLocationCode"] = destinationIATACode;
             query["departureDate"] = flightDate.ToString("yyyy-MM-dd");
 
-            if (returnDate !=null)
+            if (returnDate != null)
             {
                 query["returnDate"] = returnDate.Value.ToString("yyyy-MM-dd");
             }
