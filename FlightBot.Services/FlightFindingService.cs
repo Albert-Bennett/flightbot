@@ -26,7 +26,6 @@ namespace FlightBot.Services
                 foreach(var dest in destinations) 
                 {
                     var foundFlight = await _amadeusAPIService.FindFlightAsync(origin.IATACode, dest.IATACode, flightDate, returnDate);
-                    foundFlight = foundFlight.OrderBy(x => x.price.grandTotal).ToArray();
 
                     if (foundFlight != null)
                     {
@@ -76,6 +75,11 @@ namespace FlightBot.Services
                         }
                     }
                 }
+            }
+
+            if (foundFlights.Count > 0)
+            {
+                foundFlights = foundFlights.OrderBy(x => x.MaxPrice).Take(5).ToList();
             }
 
             return foundFlights;
