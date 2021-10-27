@@ -1,6 +1,7 @@
 ﻿using FlightBot.Services.Abstractions;
 using FlightBot.Services.DataModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FlightBot.Services
@@ -43,14 +44,20 @@ namespace FlightBot.Services
 
                 if (iataCodes.SearchResults.Length > 0)
                 {
-                    airports.Add(new LocationData
+                    foreach (var result in iataCodes.SearchResults)
                     {
-                        AirportName = iataCodes.SearchResults[0].CityAirport,
-                        IATACode = iataCodes.SearchResults[0].IATACode,
-                        CityName = airport.adminName1,
-                        Lat = airport.lat,
-                        Lng = airport.lng
-                    });
+                        if (airports.Count == 0 || airports.Any(x => !x.IATACode.Equals(result.IATACode)))
+                        {
+                            airports.Add(new LocationData
+                            {
+                                AirportName = result.CityAirport,
+                                IATACode = result.IATACode,
+                                CityName = airport.adminName1,
+                                Lat = airport.lat,
+                                Lng = airport.lng
+                            });
+                        }
+                    }
                 }
             }
 
