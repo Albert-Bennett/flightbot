@@ -35,7 +35,9 @@ namespace FlightBot.Services
             });
         }
 
-        public async Task<AmadeusFlightData[]> FindFlightAsync(string originIATACode, string destinationIATACode, DateTime flightDate, DateTime? returnDate)
+        public async Task<AmadeusFlightData[]> FindFlightAsync(string originIATACode, 
+            string destinationIATACode, DateTime flightDate, DateTime? returnDate, 
+            int adults = 1, string travelClass = "ECONOMY")
         {
             var query = HttpUtility.ParseQueryString(string.Empty);
             query["originLocationCode"] = originIATACode;
@@ -47,9 +49,9 @@ namespace FlightBot.Services
                 query["returnDate"] = returnDate.Value.ToString("yyyy-MM-dd");
             }
 
-            query["adults"] = "1";
+            query["adults"] = adults.ToString();
+            query["travelClass"] = travelClass;
             query["currencyCode"] = "EUR";
-            query["travelClass"] = "ECONOMY";
             query["max"] = "5";
 
             var offers = await GetAsync<AmadeusFlightSearchResult>($"shopping/flight-offers?{query}", await GetTokenAsync());
