@@ -25,7 +25,8 @@ namespace FlightBot.Services
             {
                 foreach(var dest in destinations) 
                 {
-                    var foundFlight = await _amadeusAPIService.FindFlightAsync(origin.IATACode, dest.IATACode, flightDate, returnDate);
+                    var foundFlight = await _amadeusAPIService.FindFlightAsync(origin.IATACode,
+                        dest.IATACode, flightDate, returnDate);
 
                     if (foundFlight != null)
                     {

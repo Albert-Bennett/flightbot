@@ -8,6 +8,6 @@ namespace FlightBot.Services.Abstractions
     {
         Task<AmadeusFlightData[]> FindFlightAsync(string originIATACode, 
             string destinationIATACode, DateTime flightDate, DateTime? returnDate,
-            int adults, string travelClass);
+            int adults = 1, string travelClass = "ECONOMY");
     }
 }
