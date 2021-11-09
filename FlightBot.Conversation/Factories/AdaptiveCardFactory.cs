@@ -40,7 +40,11 @@ namespace FlightBot.Conversation.Factories
 
         List<AdaptiveElement> CreateFlightCard(FlightCardData flightData)
         {
-            string description = $"This flight costs {flightData.Currency} {flightData.MaxPrice}, has {flightData.StopDetails.Count} stops";
+            string stopDetails = flightData.StopDetails[0].Segments.Count == 1 ?
+                " and is non stop to the destination." : 
+                $", has {flightData.StopDetails[0].Segments.Count - 1} stops.";
+
+            string description = $"This flight costs {flightData.Currency} {flightData.MaxPrice}{stopDetails}";
 
             var flightCardElements = new List<AdaptiveElement>
             {
